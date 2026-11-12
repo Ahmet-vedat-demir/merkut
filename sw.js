@@ -1,5 +1,5 @@
 // Merküt çevrimdışı önbellek: önce ağ (güncel sürüm gelsin), ağ yoksa önbellek
-const ONBELLEK = 'merkut-v71';
+const ONBELLEK = 'merkut-v72';
 const DOSYALAR = ['./', './index.html', './manifest.webmanifest', './icon-180.png', './icon-192.png', './icon-512.png'];
 self.addEventListener('install', e => { e.waitUntil(caches.open(ONBELLEK).then(c => c.addAll(DOSYALAR)).then(() => self.skipWaiting())); });
 self.addEventListener('activate', e => { e.waitUntil(caches.keys().then(k => Promise.all(k.filter(a => a !== ONBELLEK).map(a => caches.delete(a)))).then(() => self.clients.claim())); });

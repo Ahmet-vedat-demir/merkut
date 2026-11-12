@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr" data-surum="0.2.71 (web)">
+<html lang="tr" data-surum="0.2.72 (web)">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
@@ -559,6 +559,84 @@ body.camAcik #bildirim{bottom:calc(var(--camPx,0px) + var(--nav) + 10px)}
   #parcaEkran>*:not(.pArac),#skEkran>*:not(.pArac){margin-right:78px}
   #parcaEkran .pArac button.ikonlu,#skEkran .pArac button.ikonlu{width:70px}
 }
+/* ---- Masaüstü arayüzü: yatay telefon düzeni her boyutta + masaüstü ayarları ---- */
+body.masaustu{--ust:44px;--nav:0px;--serit:0px;--alt:0px;--sol:calc(72px + env(safe-area-inset-left));--sag:calc(84px + env(safe-area-inset-right))}
+body.masaustu.solKatli{--sol:22px}
+body.masaustu.sagKatli{--sag:22px}
+body.masaustu.ustKatli{--ust:22px}
+body.masaustu.camAcik{--sag:0px}
+body.masaustu .ust{left:var(--sol);right:var(--sag);padding:0 6px;height:var(--ust);transition:height .2s}
+body.masaustu .ust .ib{width:40px;height:36px}
+body.masaustu #modulNav{top:0;bottom:0;right:auto;width:var(--sol);height:auto;padding:6px 0 6px env(safe-area-inset-left);display:flex;flex-direction:column;align-items:center;gap:2px;border-top:0;border-right:1px solid #1F3A5C;transition:width .2s}
+body.masaustu #modulNav .mb{width:64px;height:56px;flex:0 0 auto;border-top:0;border-left:3px solid transparent;border-radius:0 10px 10px 0}
+body.masaustu #modulNav .mb.acik{border-left-color:var(--kirmizi)}
+body.masaustu #modulNav .bosluk{flex:1}
+body.masaustu #aracSerit{top:0;bottom:0;left:auto;right:0;width:var(--sag);height:auto;flex-direction:column;align-items:center;padding:6px 0 6px;overflow-x:hidden;overflow-y:auto;border-top:0;border-left:1px solid #1F3A5C;touch-action:pan-y;transition:width .2s}
+body.masaustu #aracSerit .grp{flex-direction:column;align-items:center;padding:0 0 6px;border-right:0;border-bottom:1px solid var(--kenar)}
+body.masaustu #aracSerit .grp>.ar{flex-direction:column}
+body.masaustu #aracSerit .ib{width:70px;height:54px}
+body.masaustu .katla{display:flex;align-items:center;justify-content:center;flex:0 0 auto;background:transparent;border:1px solid var(--kenar);border-radius:8px;color:#2EC4C6;cursor:pointer;padding:0}
+body.masaustu .katla svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s}
+body.masaustu .katla.k-sol{width:44px;height:36px;margin-top:4px}
+body.masaustu .katla.k-sag{width:70px;height:32px;margin-bottom:4px}
+body.masaustu .katla.k-sag svg{transform:rotate(180deg)}
+body.masaustu .katla.k-ust{width:40px;height:34px}
+body.masaustu .katla.k-ust svg{transform:rotate(90deg)}
+body.masaustu.solKatli #modulNav>*:not(.k-sol),body.masaustu.sagKatli #aracSerit>*:not(.k-sag),body.masaustu.ustKatli .ust>*:not(.k-ust){display:none!important}
+body.masaustu.solKatli .katla.k-sol,body.masaustu.sagKatli .katla.k-sag{width:22px;height:100%;margin:0;border:0;border-radius:0}
+body.masaustu.ustKatli .katla.k-ust{width:100%;height:22px;border:0;border-radius:0}
+body.masaustu.solKatli #modulNav,body.masaustu.sagKatli #aracSerit{padding:0}
+body.masaustu.ustKatli .ust{padding:0}
+body.masaustu.solKatli .katla.k-sol svg{transform:rotate(180deg)}
+body.masaustu.sagKatli .katla.k-sag svg{transform:none}
+body.masaustu.ustKatli .katla.k-ust svg{transform:rotate(-90deg)}
+body.masaustu #sahne{left:var(--sol);right:var(--sag);top:var(--ust);bottom:0}
+body.masaustu #agac{left:var(--sol);top:var(--ust);bottom:0;width:min(320px,48vw)}
+body.masaustu #karsilama{inset:var(--ust) var(--sag) 0 var(--sol)}
+body.masaustu #karsilama .kart{padding:14px 18px;max-width:440px}
+body.masaustu #karsilama p{margin-bottom:10px}
+body.masaustu #p2B{left:var(--sol);right:var(--sag);bottom:0}
+body.masaustu #p3Bar{left:calc((100% + var(--sol) - var(--sag)) / 2)}
+body.masaustu #secim,body.masaustu #mbdBar{left:calc(var(--sol) + 8px);right:calc(var(--sag) + 8px);bottom:8px}
+body.masaustu #kumpas{right:calc(var(--sag) + 8px);max-height:calc(100vh - var(--ust) - 16px);overflow-y:auto}
+body.masaustu #mbdListe{right:var(--sag);bottom:0}
+body.masaustu #bildirim{bottom:12px;left:calc((100% + var(--sol) - var(--sag)) / 2)}
+body.masaustu #balonEkran,body.masaustu #parcaEkran{left:var(--sol);bottom:0}
+body.masaustu #camPanel{top:var(--ust);bottom:0;left:auto;right:0;width:min(400px,50vw);height:auto;border-top:none;border-left:1px solid var(--kenar);box-shadow:-10px 0 30px rgba(0,0,0,.3)}
+body.masaustu #camPanel.kucuk{bottom:auto}
+body.masaustu.camAcik #sahne{right:min(400px,50vw);bottom:0}
+body.masaustu.camAcik #bildirim{bottom:12px}
+body.masaustu #tur .turKart.altta,body.masaustu #tur .turKart.ustte{top:50%;bottom:auto;transform:translate(-50%,-50%)}
+body.masaustu .katla.k-cam{width:36px;height:36px;margin-right:4px}
+body.masaustu .katla.k-cam svg{transform:rotate(180deg)}
+body.masaustu.camKatli #camPanel{width:22px!important;top:var(--ust)!important;bottom:0!important;padding:0!important;box-shadow:none!important}
+body.masaustu.camKatli #camPanel>*:not(.camUst){display:none!important}
+body.masaustu.camKatli #camPanel>.camUst{display:flex!important;height:100%;padding:0!important;margin:0!important;border:0!important}
+body.masaustu.camKatli #camPanel .camUst>*:not(.k-cam){display:none!important}
+body.masaustu.camKatli .katla.k-cam{width:22px;height:100%;margin:0;border:0;border-radius:0}
+body.masaustu.camKatli .katla.k-cam svg{transform:none}
+body.masaustu.camAcik.camKatli #sahne{right:22px}
+body.masaustu #karsilama p{display:none}
+body.masaustu #parcaEkran .bUst,body.masaustu #skEkran .bUst{padding-top:2px;padding-bottom:2px}
+body.masaustu #parcaEkran .pArac,body.masaustu #skEkran .pArac{position:absolute;top:0;right:0;bottom:0;width:78px;flex-direction:column;align-items:center;overflow-y:auto;overflow-x:hidden;border-bottom:0;border-left:1px solid var(--kenar);z-index:3;touch-action:pan-y;scrollbar-width:none}
+body.masaustu #parcaEkran>*:not(.pArac),body.masaustu #skEkran>*:not(.pArac){margin-right:78px}
+body.masaustu #parcaEkran .pArac button.ikonlu,body.masaustu #skEkran .pArac button.ikonlu{width:70px}
+body.masaustu{--ust:52px;--sol:84px;--sag:96px}
+body.masaustu.solKatli{--sol:22px}
+body.masaustu.sagKatli{--sag:22px}
+body.masaustu.ustKatli{--ust:22px}
+body.masaustu.camAcik{--sag:0px}
+body.masaustu #modulNav .mb{width:76px;height:62px}
+body.masaustu #aracSerit .ib{width:84px;height:58px}
+body.masaustu .ib,body.masaustu button{cursor:pointer}
+body.masaustu .ib:hover:not(:disabled),body.masaustu #modulNav .mb:hover,body.masaustu .pArac button:hover{background:rgba(46,196,198,.12)}
+body.masaustu #camPanel{width:min(440px,40vw)}
+body.masaustu.camAcik #sahne{right:min(440px,40vw)}
+body.masaustu #agac{width:min(360px,30vw)}
+body.masaustu #skAlan{cursor:crosshair}
+body.masaustu #karsilama p{display:block}
+body.masaustu #kumpas{max-width:380px}
+
 </style>
 </head>
 <body>
@@ -740,6 +818,11 @@ body.camAcik #bildirim{bottom:calc(var(--camPx,0px) + var(--nav) + 10px)}
     <div class="ayArka" id="ayArka"></div>
     <label class="ayS"><span>Kenar çizgileri<small>Parçanın kenarlarını çizer (çok büyük modellerde kendiliğinden kapanır)</small></span><button class="ayAnah" data-ayar="kenar"></button></label>
     <div class="ayS"><span>STEP kalitesi<small>Yüksek: daha pürüzsüz ama daha yavaş açılır</small></span><button class="ayDeger" id="ayKalite"></button></div>
+    <h3>Arayüz ve fare</h3>
+    <div class="ayS"><span>Arayüz<small>Otomatik: fareli geniş ekranda masaüstü düzeni</small></span><button class="ayDeger" id="ayArayuz"></button></div>
+    <div class="ayS"><span>Fare düzeni (3B)<small id="ayFareA"></small></span><button class="ayDeger" id="ayFare"></button></div>
+    <label class="ayS"><span>Tekerleği ters çevir<small>İleri: uzaklaş / geri: yaklaş</small></span><button class="ayAnah" data-ayar="tekerTers"></button></label>
+    <div class="ayS"><span>Klavye kısayolları<small>Esc iptal · Del sil · Ctrl+Z / Ctrl+Y geri-ileri · F sığdır · Ctrl+S kaydet · Ctrl+O aç</small></span></div>
     <h3>Taslak (Sketch)</h3>
     <label class="ayS"><span>Arka plan ızgarası<small>Gerçek ölçülü kareler (1–10–100 mm)</small></span><button class="ayAnah" data-ayar="izgara"></button></label>
     <label class="ayS"><span>Izgaraya yapış<small>Çizerken noktalar görünen karelere oturur</small></span><button class="ayAnah" data-ayar="yapis"></button></label>
@@ -2417,6 +2500,35 @@ class SerbestKontrol {
     const k = e.deltaY > 0 ? 1.12 : 1 / 1.12; this.yakinlas(k, e.clientX, e.clientY);
   }
 }
+// Fare profilleri (masaüstü): basılı tuşlar (e.buttons: 1 sol, 2 sağ, 4 orta) + Ctrl/Shift → işlem.
+// Tuş kombinasyonu sürükleme sırasında değişebilir (CATIA: orta basılıyken sol/sağ eklemek döndürür).
+const FARE_PROFIL = {
+  merkut: (b, e) => b & 1 ? (e.ctrlKey ? 'kaydir' : e.shiftKey ? 'yakinlas' : 'dondur') : (b & 2 || b & 4) ? 'kaydir' : null,
+  catia: (b, e) => b & 4 ? ((b & 1 || b & 2) ? 'dondur' : e.ctrlKey ? 'yakinlas' : 'kaydir') : null,
+  solidworks: (b, e) => b & 4 ? (e.ctrlKey ? 'kaydir' : e.shiftKey ? 'yakinlas' : 'dondur') : null,
+  nx: (b, e) => b & 4 ? ((b & 2) || e.shiftKey ? 'kaydir' : (b & 1) || e.ctrlKey ? 'yakinlas' : 'dondur') : null,
+  onshape: (b, e) => b & 2 ? (e.ctrlKey ? 'kaydir' : 'dondur') : b & 4 ? 'kaydir' : null
+};
+SerbestKontrol.prototype._fareIslem = function (e) { const A = window.hnlAyar || {}; const f = FARE_PROFIL[A.fare] || FARE_PROFIL.merkut; return f(e.buttons, e); };
+const _eskiBas = SerbestKontrol.prototype._bas, _eskiHareket = SerbestKontrol.prototype._hareket, _eskiTeker = SerbestKontrol.prototype._tekerlek;
+SerbestKontrol.prototype._bas = function (e) {
+  if (e.pointerType !== 'mouse') return _eskiBas.call(this, e);
+  if (!this.enabled) return; this._p.set(e.pointerId, [e.clientX, e.clientY]);
+  try { this.domElement.setPointerCapture(e.pointerId); } catch (_) {}
+  this._j = { tur: 'fare', x: e.clientX, y: e.clientY };
+};
+SerbestKontrol.prototype._hareket = function (e) {
+  if (e.pointerType !== 'mouse' || !this._j || this._j.tur !== 'fare') return _eskiHareket.call(this, e);
+  if (!this.enabled || !this._p.has(e.pointerId)) return;
+  const j = this._j; const dx = e.clientX - j.x, dy = e.clientY - j.y; j.x = e.clientX; j.y = e.clientY;
+  if (!e.buttons) return;
+  let t = this._fareIslem(e); if (t === 'dondur' && !this.enableRotate) t = 'kaydir';
+  if (t === 'dondur') this.dondur(dx, dy); else if (t === 'kaydir' && this.enablePan) this.kaydir(dx, dy); else if (t === 'yakinlas' && this.enableZoom) this.yakinlas(Math.pow(0.995, -dy));
+};
+SerbestKontrol.prototype._tekerlek = function (e) {
+  if (!this.enabled || !this.enableZoom) return; e.preventDefault();
+  const ters = (window.hnlAyar || {}).tekerTers; let k = e.deltaY > 0 ? 1.12 : 1 / 1.12; if (ters) k = 1 / k; this.yakinlas(k, e.clientX, e.clientY);
+};
 THREE.SerbestKontrol = SerbestKontrol;
 })();
 </script>
@@ -4186,14 +4298,25 @@ window.arkaPlanSiradaki = () => { let cur = 'lacivert'; try { cur = localStorage
 try { arkaPlanUygula(localStorage.getItem('hnlArka') || 'lacivert'); } catch (e) { arkaPlanUygula('lacivert'); }
 $('mArka').onclick = () => { const ad = window.arkaPlanSiradaki(); bildir('Arka plan: ' + ad, 1400); };
 // ---- Ayarlar (görünüm, taslak, tasarım); window.hnlAyar diğer modüllerden okunur
-const AYAR_VARSAYILAN = { izgara: true, yapis: true, yon: true, g1: true, otoKayit: true };
+const AYAR_VARSAYILAN = { izgara: true, yapis: true, yon: true, g1: true, otoKayit: true, arayuz: 'oto', fare: 'merkut', tekerTers: false };
 window.hnlAyar = Object.assign({}, AYAR_VARSAYILAN);
 try { Object.assign(window.hnlAyar, JSON.parse(localStorage.getItem('hnlAyar') || '{}')); } catch (e) {}
 function ayarKaydet() { try { localStorage.setItem('hnlAyar', JSON.stringify(window.hnlAyar)); } catch (e) {} }
+// Arayüz: telefon / masaüstü. Otomatik: fareli (hassas imleç) ve geniş ekranda masaüstü.
+const MASAUSTU_MQ = window.matchMedia('(pointer: fine) and (hover: hover) and (min-width: 900px)');
+function arayuzUygula() {
+  const a = window.hnlAyar.arayuz; const m = a === 'masaustu' || (a !== 'telefon' && MASAUSTU_MQ.matches);
+  const once = document.body.classList.contains('masaustu'); document.body.classList.toggle('masaustu', m);
+  if (once !== m) window.dispatchEvent(new Event('resize'));
+}
+MASAUSTU_MQ.addEventListener('change', arayuzUygula);
+arayuzUygula();
 function ayarlarYaz() {
   const A = window.hnlAyar;
   document.querySelectorAll('#ayarlar .ayAnah').forEach(b => { const k = b.dataset.ayar; b.classList.toggle('on', k === 'kenar' ? !!D.kenar : !!A[k]); });
   $('ayKalite').textContent = $('mKaliteD').textContent;
+  $('ayArayuz').textContent = { oto: 'Otomatik', telefon: 'Telefon', masaustu: 'Masaüstü' }[A.arayuz || 'oto'];
+  const FP = FARE_ACIKLAMA[A.fare || 'merkut']; $('ayFare').textContent = FP[0]; $('ayFareA').textContent = FP[1];
   let cur = 'lacivert'; try { cur = localStorage.getItem('hnlArka') || 'lacivert'; } catch (e) {}
   const kutu = $('ayArka'); kutu.innerHTML = '';
   for (const [id, ad, css] of ARKA_PLANLAR) { const b = document.createElement('button'); b.style.background = css || 'radial-gradient(120% 90% at 50% 0%,#1A3354 0%,#0D1D33 58%,#081324 100%)'; b.textContent = ad; b.classList.toggle('on', id === cur);
@@ -4212,6 +4335,35 @@ document.querySelectorAll('#ayarlar .ayAnah').forEach(b => b.onclick = e => {
   ayarlarYaz();
 });
 $('ayKalite').onclick = () => { $('mKalite').click(); setTimeout(ayarlarYaz, 50); };
+const FARE_ACIKLAMA = {
+  merkut: ['Merküt', 'Sol: döndür · Sağ/Orta: kaydır · Ctrl+Sol: kaydır · Shift+Sol: yakınlaş'],
+  catia: ['CATIA', 'Orta: kaydır · Orta+Sol/Sağ: döndür · Ctrl+Orta: yakınlaş'],
+  solidworks: ['SolidWorks', 'Orta: döndür · Ctrl+Orta: kaydır · Shift+Orta: yakınlaş'],
+  nx: ['NX', 'Orta: döndür · Orta+Sağ veya Shift+Orta: kaydır · Orta+Sol veya Ctrl+Orta: yakınlaş'],
+  onshape: ['Onshape', 'Sağ: döndür · Orta veya Ctrl+Sağ: kaydır']
+};
+$('ayArayuz').onclick = () => { const s = ['oto', 'telefon', 'masaustu']; const A = window.hnlAyar; A.arayuz = s[(s.indexOf(A.arayuz || 'oto') + 1) % 3]; ayarKaydet(); arayuzUygula(); ayarlarYaz(); };
+$('ayFare').onclick = () => { const s = Object.keys(FARE_ACIKLAMA); const A = window.hnlAyar; A.fare = s[(s.indexOf(A.fare || 'merkut') + 1) % s.length]; ayarKaydet(); ayarlarYaz(); };
+// ---- klavye kısayolları (masaüstü)
+document.addEventListener('keydown', e => {
+  const t = e.target; if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA' || t.isContentEditable)) return;
+  const acik = id => { const el = document.getElementById(id); return el && (el.classList.contains('acik') || getComputedStyle(el).display !== 'none'); };
+  const tik = id => { const el = document.getElementById(id); if (el && !el.disabled && el.offsetParent !== null) { el.click(); return true; } return false; };
+  const sk = acik('skEkran') && document.getElementById('skEkran').classList.contains('acik'), pd = !sk && document.getElementById('parcaEkran').classList.contains('acik');
+  const ctrl = e.ctrlKey || e.metaKey, k = e.key.toLowerCase();
+  if (e.key === 'Escape') {
+    if (document.getElementById('ayarlar').classList.contains('acik')) { $('ayarlar').classList.remove('acik'); e.preventDefault(); return; }
+    if (sk && window.parcaTest && window.parcaTest.skIptal) { window.parcaTest.skIptal(); e.preventDefault(); return; }
+    if (pd && window.parcaTest && window.parcaTest.pdIptal) { window.parcaTest.pdIptal(); e.preventDefault(); return; }
+    return;
+  }
+  if (ctrl && k === 'z' && !e.shiftKey) { if (tik(sk ? 'skGeri' : pd ? 'pGeri' : '')) e.preventDefault(); return; }
+  if (ctrl && (k === 'y' || (k === 'z' && e.shiftKey))) { if (tik(sk ? 'skIleri' : pd ? 'pYinele' : '')) e.preventDefault(); return; }
+  if (ctrl && k === 's') { e.preventDefault(); if (pd) tik('pmKaydet'); return; }
+  if (ctrl && k === 'o') { e.preventDefault(); tik('mAc'); return; }
+  if (!ctrl && !e.altKey && k === 'f') { tik(sk ? 'skSigdir' : pd ? 'pSigdir' : 'vSigdir') || tik('bSigdir'); return; }
+  if ((e.key === 'Delete' || e.key === 'Backspace') && sk && window.parcaTest && window.parcaTest.skSil) { window.parcaTest.skSil(); e.preventDefault(); }
+});
 $('ayTur').onclick = () => { $('ayarlar').classList.remove('acik'); const y = document.getElementById('btnYardim'); if (y) y.click(); };
 $('aySifirla').onclick = () => { window.hnlAyar = Object.assign({}, AYAR_VARSAYILAN); ayarKaydet(); arkaPlanUygula('lacivert'); ayarlarYaz(); bildir('Ayarlar sıfırlandı.', 1500); };
 $('ayLisans').onclick = () => { $('ayarlar').classList.remove('acik'); $('lisans').style.display = 'grid'; };
@@ -7229,6 +7381,7 @@ function skBaslat() {
     if (parmak.size === 2) { const [a, b] = [...parmak.values()]; jest = { tur: 'cimdik', d: Math.hypot(a[0] - b[0], a[1] - b[1]), m: [(a[0] + b[0]) / 2, (a[1] + b[1]) / 2] }; lup(0, 0, false); skCiz(); return; }
     if (parmak.size > 2) return;
     degerBitir(true);
+    if (e.pointerType === 'mouse' && (e.button === 1 || e.button === 2)) { e.preventDefault(); jest = { tur: 'kaydir', x: e.clientX, y: e.clientY, tx: S.tx, ty: S.ty, fare: true }; return; }   // orta/sağ tuş: kaydır
     const w = dunya(e.clientX, e.clientY); const dokunmatik = e.pointerType !== 'mouse';
     jest = { tur: 'bekle', x: e.clientX, y: e.clientY, w, t: performance.now(), dokunmatik, hareket: false };
     if (S.arac === 'sec') {
@@ -7251,6 +7404,7 @@ function skBaslat() {
       S.tx = cx - (cx - S.tx) * k; S.ty = cy - (cy - S.ty) * k; S.s *= k; jest.d = d; jest.m = m; skCiz(); return;
     }
     if (jest.tur === 'cimdik') return;
+    if (jest.tur === 'kaydir' && jest.fare) { S.tx = jest.tx + e.clientX - jest.x; S.ty = jest.ty + e.clientY - jest.y; skCiz(); return; }
     if (!jest.hareket && Math.hypot(e.clientX - jest.x, e.clientY - jest.y) > 7) {
       jest.hareket = true;
       if (S.arac === 'sec') {
@@ -7273,6 +7427,7 @@ function skBaslat() {
   const bitir = e => {
     if (!parmak.has(e.pointerId)) return; parmak.delete(e.pointerId); const j = jest; lup(0, 0, false); if (!j) return;
     if (j.tur === 'cimdik') { if (!parmak.size) jest = null; return; }
+    if (j.tur === 'kaydir' && j.fare) { jest = null; skCiz(); return; }
     const yk = S.yakalanan; jest = null; S.yakalanan = null; S.etiketYazi = '';
     const w = dunya(e.clientX, e.clientY);
     if (S.arac === 'sec') {
@@ -7289,6 +7444,7 @@ function skBaslat() {
     const y = yakala(w, S.arac === 'cizgi' && S.adim ? KONUM(S.adim.son) : null);
     dokunAracla(y, w, j);
   };
+  A.addEventListener('contextmenu', e => e.preventDefault());
   A.addEventListener('pointerup', bitir);
   A.addEventListener('pointercancel', e => { parmak.delete(e.pointerId); jest = null; S.gecici = null; lup(0, 0, false); skCiz(); });
   A.addEventListener('wheel', e => { e.preventDefault(); const R = A.getBoundingClientRect(); const k = e.deltaY < 0 ? 1.15 : 1 / 1.15; const cx = e.clientX - R.left, cy = e.clientY - R.top; S.tx = cx - (cx - S.tx) * k; S.ty = cy - (cy - S.ty) * k; S.s *= k; skCiz(); }, { passive: false });
@@ -7464,7 +7620,10 @@ $('pmStep').onclick = () => { $('pMenuP').classList.remove('acik'); stepAktar();
 $('pmAd').onclick = async () => { $('pMenuP').classList.remove('acik'); const r = await form('Parça adı', [{ ad: 'Ad', deger: P.ad, metin: true }]); if (r && r[0]) { P.ad = r[0].trim().replace(/[\\/:*?"<>|]/g, '_'); $('pBaslik').textContent = P.ad; } };
 skBaslat();
 try { tezgahAyarla(localStorage.getItem('hnlTezgah') || 'k'); } catch (e) { tezgahAyarla('k'); }
-window.parcaTest = { skCiz: () => skCiz(), SKM: SkModel, P, S, modelMetni, hesapla, motor, tegetZincir, tezgahAyarla, yuzeyEkle, get R3() { return R3; } };
+window.parcaTest = { skCiz: () => skCiz(),
+  skIptal: () => { if (S.adim) { if (S.arac === 'spline' || S.arac === 'cizgi') cizgiBitir(); else { S.adim = null; S.gecici = null; } } else if (S.sec.length) S.sec = []; else { const b = document.querySelector('#skAraclar button[data-arac=sec]'); if (b) b.click(); } sayiCubugu(); skCiz(); },
+  skSil: () => { if (S.sec.some(id => id !== 'H' && id !== 'V' && id !== 'O')) kisitUygula('sil'); },
+  pdIptal: () => { kenarIptal(); formKapat(); }, SKM: SkModel, P, S, modelMetni, hesapla, motor, tegetZincir, tezgahAyarla, yuzeyEkle, get R3() { return R3; } };
 })();
 </script>
 <script type="text/plain" id="clipperKod">/*******************************************************************************
@@ -17008,7 +17167,7 @@ $('camIc').addEventListener('click', e => {
     dizi: 'M4 4h5v5H4zM15 4h5v5h-5zM4 15h5v5H4zM15 15h5v5h-5z'
   };
   const YATAY = '(orientation: landscape) and (max-height: 560px)';
-  const yatayMi = () => window.matchMedia(YATAY).matches;
+  const yatayMi = () => document.body.classList.contains('masaustu') || window.matchMedia(YATAY).matches;
   const body = document.body;
 
   // ---------------------------------------------------------------- üst çubuk
