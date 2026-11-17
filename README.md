@@ -4,5 +4,6 @@ Tarayıcıda çalışan sürüm: telefonda (iPhone Safari dahil) ve bilgisayarda
 
 - **Telefon:** linki Safari'de aç → Paylaş → **Ana Ekrana Ekle**. Bir kez açıldıktan sonra internetsiz de çalışır.
 - **Bilgisayar:** fareli geniş ekranda masaüstü düzeni kendiliğinden açılır. Ayarlar (⚙) → Arayüz ile Telefon/Masaüstü elle seçilebilir; fare düzeni Merküt, CATIA, SolidWorks, NX ya da Onshape olabilir.
+  CATIA düzeni: orta sürükle = kaydır · orta + sol/sağ basılı = döndür · orta basılıyken sol/sağa tıkla-bırak, sonra sürükle = yakınlaş · tekerlek ağacı kaydırır, Ctrl+tekerlek yakınlaşır.
 
 Kısayollar: Esc iptal · Del sil · Ctrl+Z / Ctrl+Y geri-ileri · F sığdır · Ctrl+S kaydet · Ctrl+O aç
