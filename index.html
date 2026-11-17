@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr" data-surum="0.2.78 (web)">
+<html lang="tr" data-surum="0.2.80 (web)">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
@@ -34,6 +34,25 @@ button{font:inherit;color:inherit}
 ::-webkit-scrollbar-thumb{background:#2E557F;border-radius:8px;border:2px solid transparent;background-clip:padding-box}
 ::-webkit-scrollbar-thumb:hover{background:#2EC4C6;background-clip:padding-box}
 ::-webkit-scrollbar-corner,::-webkit-scrollbar-button{display:none;background:transparent}
+/* görünüm küpü (NX tarzı) */
+.gKup{position:absolute;right:10px;bottom:10px;width:78px;height:78px;z-index:4;touch-action:none;user-select:none;-webkit-user-select:none;transition:bottom .18s}
+.gkMerkez{position:absolute;left:50%;top:50%;width:0;height:0;z-index:1}
+.gkKutu{position:absolute;left:0;top:0;width:0;height:0;transform-style:preserve-3d}
+.gkYuz{position:absolute;left:0;top:0;box-sizing:border-box;display:flex;align-items:center;justify-content:center;background:rgba(22,48,80,.93);border:1px solid rgba(127,227,228,.55);color:#D6EEF5;font:700 8.5px/1 system-ui,sans-serif;letter-spacing:.2px;backface-visibility:hidden;-webkit-backface-visibility:hidden;cursor:pointer;transition:background .15s}
+.gkYuz.aktif{background:rgba(46,196,198,.88);color:#04202A;border-color:#7FE3E4}
+.gKup.surukle .gkYuz{cursor:grabbing}
+@media (hover:hover){.gkYuz:hover{background:#2EC4C6;color:#04202A}}
+.gkSvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.gkArka{z-index:0}.gkOn{z-index:2}
+.gkSvg text{font:800 10px system-ui,sans-serif;paint-order:stroke;stroke:rgba(6,16,30,.85);stroke-width:2.6px}
+.gkKose{fill:#E8EEF4;stroke:#0A1628;stroke-width:1}
+.gkEv{position:absolute;left:-30px;bottom:0;width:24px;height:24px;border-radius:7px;border:1px solid var(--kenar);background:rgba(13,29,51,.88);color:#9FD8E0;padding:4px;display:flex;cursor:pointer;z-index:3}
+.gkEv svg{width:100%;height:100%;fill:none;stroke:currentColor;stroke-width:2.2;stroke-linejoin:round}
+body.masaustu .gKup{width:118px;height:118px;right:18px;bottom:18px}
+body.masaustu .gkYuz{font-size:12px}
+body.masaustu .gkSvg text{font-size:13px}
+body.masaustu .gkEv{width:26px;height:26px;left:-34px;bottom:0}
+@media (hover:hover){.gkEv:hover{color:#04202A;background:#2EC4C6}}
 .ib.acik{background:rgba(46,196,198,.16);border-color:var(--vurgu);color:var(--vurgu2)}
 .ib:disabled{opacity:.35}
 .birincil{background:var(--vurgu);color:#0A1628;border:none;border-radius:10px;font-weight:700;padding:0 14px;height:40px;display:flex;align-items:center;gap:6px;cursor:pointer}
@@ -354,6 +373,7 @@ body.camAcik #bildirim{bottom:calc(var(--camPx,var(--alt)) + 10px)}
 #kSonuc{background:var(--bg);border-radius:9px;padding:6px 10px;-webkit-user-select:text;user-select:text}
 #kSonuc .b{color:var(--soluk);font-size:10.5px;font-weight:700;letter-spacing:.05em}
 #kSonuc .d{color:var(--vurgu);font-size:19px;font-weight:700;line-height:1.2}
+.ucsDug{display:flex;flex-wrap:wrap;gap:5px;margin:6px 0 2px}.ucsDug button{height:30px;padding:0 10px;border-radius:8px;border:1px solid var(--kenar);background:rgba(46,196,198,.1);color:var(--metin,#E6F1F5);font-size:12px;cursor:pointer}.ucsDug button.tehlikeli{border-color:rgba(229,103,91,.6);color:#F2A49B;background:transparent}
 #kSonuc .a{font-size:12px;margin-top:2px}
 #kumpas .alt2{display:flex;justify-content:space-between;margin-top:8px}
 .hayalet{background:transparent;border:1px solid var(--kenar);border-radius:8px;padding:7px 10px;font-size:12.5px;cursor:pointer}
@@ -799,6 +819,7 @@ body.masaustu #kumpas{max-width:380px}
   <button id="mCam">CAM · 2.5D frezeleme ve G-code</button>
   <div class="ay"></div>
   <div class="etk">GÖRÜNÜM</div>
+  <button id="mUcs" hidden>UCS</button>
   <button id="mKenar">Kenar çizgileri: <b class="sec" id="mKenarD">Açık</b></button>
   <button id="mKalite">STEP kalitesi: <b class="sec" id="mKaliteD">Normal</b></button>
   <button id="mArka">Arka plan: <b class="sec" id="mArkaD">Lacivert</b></button>
@@ -3612,6 +3633,140 @@ if (typeof module !== 'undefined') module.exports = DXF;
 const $ = id => document.getElementById(id);
 const V3 = THREE.Vector3;
 
+// ===================================================================== GÖRÜNÜM KÜPÜ (NX tarzı)
+// Sağ altta küçük küp + köşesinden kenarları boyunca çıkan X/Y/Z okları. Kamerayla birlikte döner.
+// Yüze dokun → o yüze dik bakış (yumuşak geçiş). Küpü sürükle → modeli döndür. ⌂ → izometrik.
+// CSS 3B ile çizilir (ek WebGL bağlamı yok, telefonu yormaz).
+function gorunumKupu(kap, kam, kt, yenile, opt) {
+  opt = opt || {};
+  const YUZ = [
+    ['on', 'ÖN', [0, -1, 0], [1, 0, 0], [0, 0, -1]],
+    ['arka', 'ARKA', [0, 1, 0], [-1, 0, 0], [0, 0, -1]],
+    ['sag', 'SAĞ', [1, 0, 0], [0, 1, 0], [0, 0, -1]],
+    ['sol', 'SOL', [-1, 0, 0], [0, -1, 0], [0, 0, -1]],
+    ['ust', 'ÜST', [0, 0, 1], [1, 0, 0], [0, -1, 0]],
+    ['alt', 'ALT', [0, 0, -1], [1, 0, 0], [0, 1, 0]]
+  ];
+  const el = document.createElement('div'); el.className = 'gKup'; el.setAttribute('aria-label', 'Görünüm küpü');
+  el.innerHTML = '<svg class="gkSvg gkArka"></svg><div class="gkMerkez"><div class="gkKutu">' +
+    YUZ.map(([k, ad]) => `<div class="gkYuz" data-y="${k}" title="${ad.charAt(0) + ad.slice(1).toLocaleLowerCase('tr')} görünüm"><span>${ad}</span></div>`).join('') +
+    '</div></div><svg class="gkSvg gkOn"></svg><button class="gkEv" title="İzometrik görünüm (ana görünüm)" aria-label="İzometrik görünüm"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg></button>';
+  kap.appendChild(el);
+  const kutu = el.querySelector('.gkKutu'), svgA = el.querySelector('.gkArka'), svgO = el.querySelector('.gkOn');
+  const yuzEl = {}; el.querySelectorAll('.gkYuz').forEach(y => yuzEl[y.dataset.y] = y);
+  const R = new THREE.Matrix4(); const e = R.elements; let sonImza = '', sonL = 0, anim = null;
+  const RENK = ['#F0524F', '#45C266', '#4C8DF6'], AD = ['X', 'Y', 'Z'];
+  const NS = 'http://www.w3.org/2000/svg';
+
+  function yuzleriKur(L) {
+    for (const [k, , n, u, v] of YUZ) {
+      const h = L / 2; const m = [u[0], u[1], u[2], 0, v[0], v[1], v[2], 0, n[0], n[1], n[2], 0, n[0] * h, n[1] * h, n[2] * h, 1];
+      const y = yuzEl[k]; y.style.width = y.style.height = L + 'px'; y.style.marginLeft = y.style.marginTop = -L / 2 + 'px';
+      y.style.transform = `matrix3d(${m.map(x => +x.toFixed(6)).join(',')})`;
+    }
+  }
+  // dünya yönü → ekran (x sağ, y aşağı, z izleyiciye doğru)
+  const ekr = (x, y, z) => [e[0] * x + e[4] * y + e[8] * z, -(e[1] * x + e[5] * y + e[9] * z), e[2] * x + e[6] * y + e[10] * z];
+
+  function guncelle() {
+    const goster = !opt.gorunur || opt.gorunur();
+    el.style.display = goster ? '' : 'none'; if (!goster) return;
+    // altta açılan kart/panel küpü örtüyorsa yukarı kaldır
+    if (opt.engel) {
+      const K = kap.getBoundingClientRect(); let ek = 0;
+      for (const o of opt.engel()) { if (!o) continue; const r = o.getBoundingClientRect(); if (getComputedStyle(o).visibility === "hidden" || +getComputedStyle(o).opacity < 0.05) continue;
+        if (r.height && r.top < K.bottom - 2 && r.bottom > K.bottom - 140 && r.right > K.right - 140 && r.left < K.right) ek = Math.max(ek, K.bottom - r.top); }
+      const b = ek ? ek + 8 + 'px' : ''; if (el.style.bottom !== b) el.style.bottom = b;
+    }
+    kam.updateMatrixWorld(); R.copy(kam.matrixWorldInverse);
+    const W = el.clientWidth || 70; const L = Math.round(W * 0.42);
+    if (L !== sonL) { sonL = L; yuzleriKur(L); }
+    const imza = Array.from({ length: 11 }, (_, i) => e[i].toFixed(4)).join(',') + L;
+    if (imza === sonImza) return; sonImza = imza;
+    // kutu: dünya → CSS (y aşağı)
+    const M = [e[0], -e[1], e[2], 0, e[4], -e[5], e[6], 0, e[8], -e[9], e[10], 0, 0, 0, 0, 1];
+    kutu.style.transform = `matrix3d(${M.map(x => +x.toFixed(6)).join(',')})`;
+    // kameraya bakan yüzü işaretle (o görünümdeysen)
+    for (const [k, , n] of YUZ) yuzEl[k].classList.toggle('aktif', ekr(...n)[2] > 0.9999);
+    // oklar: (−,−,−) köşesinden kenarlar boyunca, küpün dışına taşarak
+    svgA.innerHTML = ''; svgO.innerHTML = '';
+    const c = W / 2, h = L / 2, uz = L * 1.9;
+    const ko = ekr(-h, -h, -h);
+    for (let a = 0; a < 3; a++) {
+      const d = [0, 0, 0]; d[a] = 1;
+      const uc = ekr(-h + d[0] * uz, -h + d[1] * uz, -h + d[2] * uz);
+      // bu kenara komşu iki yüzden biri görünüyorsa ok önde, değilse küpün arkasında
+      const kom = [0, 1, 2].filter(b => b !== a).map(b => { const n = [0, 0, 0]; n[b] = -1; return ekr(...n)[2]; });
+      const hedef = kom.some(z => z > 1e-3) ? svgO : svgA;
+      const x0 = c + ko[0], y0 = c + ko[1], x1 = c + uc[0], y1 = c + uc[1];
+      const dx = x1 - x0, dy = y1 - y0, Ln = Math.hypot(dx, dy) || 1, ux = dx / Ln, uy = dy / Ln;
+      const kisa = Ln < 6;   // ok tam bize/uzağa bakıyor
+      const g = document.createElementNS(NS, 'g'); g.setAttribute('stroke', RENK[a]); g.setAttribute('fill', RENK[a]);
+      if (!kisa) {
+        const ah = Math.min(7, Ln * 0.35), bx = x1 - ux * ah, by = y1 - uy * ah;
+        g.innerHTML = `<line x1="${x0}" y1="${y0}" x2="${bx}" y2="${by}" stroke-width="2.2" stroke-linecap="round"/>` +
+          `<path d="M${x1} ${y1}L${bx - uy * ah * 0.5} ${by + ux * ah * 0.5}L${bx + uy * ah * 0.5} ${by - ux * ah * 0.5}Z" stroke="none"/>`;
+      }
+      const tx = x1 + (kisa ? 8 : ux * 8), ty = y1 + (kisa ? -8 : uy * 8);
+      g.innerHTML += `<text x="${tx}" y="${ty}" text-anchor="middle" dominant-baseline="central">${AD[a]}</text>`;
+      hedef.appendChild(g);
+    }
+    // köşe noktası
+    if (svgO.childNodes.length) { const k = document.createElementNS(NS, 'circle'); k.setAttribute('cx', c + ko[0]); k.setAttribute('cy', c + ko[1]); k.setAttribute('r', 2.4); k.setAttribute('class', 'gkKose'); (ko[2] > -h * 0.2 ? svgO : svgA).appendChild(k); }
+  }
+
+  // yumuşak geçiş: hedef yöne (kameradan hedefe bakış -n) ve yukarı vektörüne
+  function yoneBak(n, up, sonra) {
+    const hedefQ = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(new THREE.Vector3(...n), new THREE.Vector3(), new THREE.Vector3(...up)));
+    const basQ = kam.quaternion.clone(); const t0 = performance.now(), sure = 320;
+    const dist = Math.max(kam.position.distanceTo(kt.target), 1e-6);
+    if (anim) cancelAnimationFrame(anim);
+    const adim = () => {
+      const t = Math.min(1, (performance.now() - t0) / sure), s = t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2;
+      const q = basQ.clone().slerp(hedefQ, s);
+      kam.position.copy(kt.target).addScaledVector(new THREE.Vector3(0, 0, 1).applyQuaternion(q), dist);
+      kam.up.set(0, 1, 0).applyQuaternion(q); kt.update(); yenile();
+      if (t < 1) anim = requestAnimationFrame(adim); else { anim = null; if (sonra) sonra(); }
+    };
+    anim = requestAnimationFrame(adim);
+  }
+  function yuzeBak(k) {
+    const y = YUZ.find(q => q[0] === k); const n = y[2];
+    const up = n[2] === 1 ? [0, 1, 0] : n[2] === -1 ? [0, -1, 0] : [0, 0, 1];
+    yoneBak(n, up, opt.bakti ? () => opt.bakti(k) : null);
+  }
+
+  // olaylar: dokun = yüze bak, sürükle = modeli döndür
+  let bas = null, surukle = false;
+  el.addEventListener('pointerdown', ev => {
+    if (ev.target.closest('.gkEv')) return;
+    bas = { x: ev.clientX, y: ev.clientY, id: ev.pointerId }; surukle = false; try { el.setPointerCapture(ev.pointerId); } catch (_) {}
+    ev.preventDefault(); ev.stopPropagation();
+  });
+  el.addEventListener('pointermove', ev => {
+    if (!bas || ev.pointerId !== bas.id) return;
+    const dx = ev.clientX - bas.x, dy = ev.clientY - bas.y;
+    if (!surukle && Math.hypot(dx, dy) < 5) return;
+    surukle = true; el.classList.add('surukle'); kt.dondur(dx * 1.6, dy * 1.6); bas.x = ev.clientX; bas.y = ev.clientY;
+  });
+  const birak = ev => {
+    if (!bas || ev.pointerId !== bas.id) return;
+    const s = surukle; bas = null; surukle = false; el.classList.remove('surukle');
+    if (s || ev.type === 'pointercancel') return;
+    const t = document.elementFromPoint(ev.clientX, ev.clientY); const y = t && t.closest && t.closest('.gkYuz');
+    if (y && el.contains(y)) yuzeBak(y.dataset.y);
+  };
+  el.addEventListener('pointerup', birak); el.addEventListener('pointercancel', birak);
+  el.addEventListener('wheel', ev => ev.stopPropagation(), { passive: true });
+  el.querySelector('.gkEv').addEventListener('click', ev => {
+    ev.stopPropagation();
+    const n = new THREE.Vector3(1, -1, 0.8).normalize();
+    yoneBak(n.toArray(), [0, 0, 1], opt.ev || null);
+  });
+  return { el, guncelle, yuzeBak, yoneBak };
+}
+
+
 // ===================================================================== DURUM
 const D = {
   tur: null, ad: '', parcalar: [], agacKok: null, secili: new Set(), kenar: true,
@@ -3639,9 +3794,29 @@ kontrol.agacBul = () => { const a = document.getElementById('agac'); return a &&
 kontrol.enableDamping = false; kontrol.zoomToCursor = true; kontrol.screenSpacePanning = true;
 kontrol.touches = { ONE: THREE.TOUCH.ROTATE, TWO: THREE.TOUCH.DOLLY_PAN };
 kontrol.addEventListener('change', ciz);
+const gorKup = gorunumKupu(sahneEl, kamera, kontrol, ciz, { gorunur: () => D.parcalar.length > 0 && D.tur !== 'dxf', ev: () => tumunuSigdir('izo'), engel: () => [$('secim'), $('kumpas'), $('mbdBar')] });
 
 let cizBekliyor = false;
-function ciz() { if (cizBekliyor) return; cizBekliyor = true; requestAnimationFrame(() => { cizBekliyor = false; if (window.pmiOncesi) pmiOncesi(); renderer.render(sahne, kamera); etiketGuncelle(); if (window.balonCiz) balonCiz(); }); }
+// Kamera kırpma düzlemleri (near/far) her çizimde görünen modelin tamamına göre ayarlanır. Eskiden yalnızca odaklanırken
+// ayarlanıyordu: küçük bir parçaya odaklanıp (izole) sonra montaja dönünce büyük parçalar "uzak" sınırın dışında kalıp kesiliyordu.
+let kirpKutu = null, kirpImza = '';
+function kirpmaGecersiz() { kirpKutu = null; }
+function kirpmaAyarla() {
+  let gz = 0; for (const p of D.parcalar) if (p.gizli) gz++;
+  const imza = D.parcalar.length + ':' + model.children.length + ':' + gz;
+  if (!kirpKutu || imza !== kirpImza) {
+    kirpImza = imza; const k = new THREE.Box3(); const g = new THREE.Box3();
+    for (const p of D.parcalar) if (!p.gizli) for (const o of p.nesneler) if (o.geometry && o.geometry.boundingBox) k.union(g.copy(o.geometry.boundingBox).applyMatrix4(o.matrixWorld));
+    if (k.isEmpty()) model.traverse(o => { if (o.geometry) { if (!o.geometry.boundingBox) o.geometry.computeBoundingBox(); k.union(g.copy(o.geometry.boundingBox).applyMatrix4(o.matrixWorld)); } });
+    kirpKutu = k.isEmpty() ? null : { c: k.getCenter(new V3()), R: Math.max(k.getSize(new V3()).length() / 2, 1e-3) };
+  }
+  if (!kirpKutu) return;
+  const { c, R } = kirpKutu; const d = kamera.position.distanceTo(c);
+  const far = d + R * 1.6 + 1e-3;
+  const near = Math.max(d - R * 1.6, Math.max(R, d) / 20000, 1e-4);
+  if (Math.abs(kamera.far - far) > far * 1e-3 || Math.abs(kamera.near - near) > near * 1e-3) { kamera.near = near; kamera.far = far; kamera.updateProjectionMatrix(); }
+}
+function ciz() { if (cizBekliyor) return; cizBekliyor = true; requestAnimationFrame(() => { cizBekliyor = false; if (window.pmiOncesi) pmiOncesi(); kirpmaAyarla(); renderer.render(sahne, kamera); gorKup.guncelle(); etiketGuncelle(); if (window.balonCiz) balonCiz(); }); }
 function boyutla() {
   const w = sahneEl.clientWidth, h = sahneEl.clientHeight; if (!w || !h) return;
   renderer.setSize(w, h, false); kamera.aspect = w / h; kamera.updateProjectionMatrix(); ciz();
@@ -3794,7 +3969,7 @@ async function dosyaAc(f) {
 
 function sahneTemizle() {
   if (window.camKapat) camKapat(true);
-  kumpasAc(false); secimTemizle(); if (window.pmiTemizle) pmiTemizle();
+  kumpasAc(false); secimTemizle(); if (window.pmiTemizle) pmiTemizle(); ucsKaldir();
   for (const g of [model, kenarGrup]) { while (g.children.length) { const c = g.children.pop(); if (c.geometry) { c.geometry.dispose(); if (c.geometry.userData.kenarGeo) c.geometry.userData.kenarGeo.dispose(); } } }
   D.parcalar = []; D.agacKok = null; D.dxf = null; D.dxfGeo = null; D.grupRenk = new Map(); D.dxfIndeks = null;
   kontrol.enableRotate = true; kontrol.touches.ONE = THREE.TOUCH.ROTATE; kontrol.mouseButtons.LEFT = THREE.MOUSE.ROTATE;
@@ -4214,6 +4389,7 @@ $('vGoster').onclick = () => { D.parcalar.forEach(p => p.gizli = false); gorunur
 
 // ===================================================================== GÖRÜNÜRLÜK VE SEÇİM
 function gorunurlukUygula() {
+  kirpmaGecersiz();
   for (const p of D.parcalar) for (const o of p.nesneler) { o.visible = !p.gizli; if (o.userData.kenar) o.userData.kenar.visible = !p.gizli && D.kenar; }
   agacYenile(); ciz();
 }
@@ -4529,7 +4705,8 @@ const MOD_STEP = [
   ['cap', 'Çap / R', 'Silindirik bir yüzeye (delik, mil, radyüs) dokunun.'],
   ['d3', '3 Nokta Daire', 'Dairesel bir kenar üzerinde üç noktaya dokunun.'],
   ['aci', 'Açı', 'İki düz yüzeye dokunun.'],
-  ['alan', 'Alan', 'Yüzeylere dokunun; alanlar toplanır.']
+  ['alan', 'Alan', 'Yüzeylere dokunun; alanlar toplanır.'],
+  ['ucs', 'UCS', 'Z için düz yüzey, düz kenar ya da daireye; sonra X için ona DİK ikinci bir referansa dokunun. Dik değilse UCS atanmaz. Kenarda dokunduğunuz uç orijin olur.']
 ];
 const MOD_DXF = [
   ['nn', 'Nokta–Nokta', 'İki noktaya dokunun. Uç, orta ve merkez noktalarına yapışır.'],
@@ -4548,6 +4725,7 @@ function kumpasAc(ac) {
   secimKarti();
 }
 $('btnKumpas').onclick = () => kumpasAc(!$('kumpas').classList.contains('acik'));
+$('mUcs').onclick = () => { if (!D.parcalar.length || D.tur === 'dxf') { bildir('UCS için önce bir STEP / 3B model aç.'); return; } K.mod = 'ucs'; if (!$('kumpas').classList.contains('acik')) kumpasAc(true); else modSec('ucs'); };
 $('kKapat').onclick = () => kumpasAc(false);
 $('kKucult').onclick = () => $('kumpas').classList.toggle('kucuk');
 $('kTemizle').onclick = () => modSec(K.mod);
@@ -4563,6 +4741,7 @@ function modSec(a) {
   document.querySelectorAll('.mod').forEach(b => b.classList.toggle('acik', b.dataset.m === a));
   const ak = document.querySelector('.mod.acik'); if (ak) ak.scrollIntoView({ inline: 'nearest', block: 'nearest' });
   $('kIpucu').textContent = (modlar().find(m => m[0] === a) || [, , ''])[2];
+  if (a === 'ucs') { if (window.incUcs) ucsSonucYaz('Yeni UCS için modele dokun.'); else sonuc('UCS', '0 / 2', 'Z yönü için düz bir yüzeye, düz kenara ya da daireye dokunun.'); return; }
   sonuc('HAZIR', '—', 'Ölçmek için modele dokunun.');
 }
 function sonuc(b, d, a) { $('kSonuc').innerHTML = `<div class="b">${b}</div><div class="d">${d}</div>${a ? `<div class="a">${a}</div>` : ''}`; }
@@ -4676,7 +4855,7 @@ function cevrel(a, b, c) { // 3 noktadan geçen çember
 }
 
 // ---- STEP kenar–kenar: dokunulan yüzün sınırından en yakın B-rep kenarı (köşelerden bölünmüş zincir)
-function stepKenar(x, y) {
+function stepKenar(x, y, esik) {
   const h = stepIsin(x, y); if (!h) return null; const f = yuzBul(h); if (f < 0) return null;
   const o = h.object, yz = o.userData.yuz, idx = o.geometry.index.array, pos = o.geometry.attributes.position.array, MW = o.matrixWorld;
   const anah = i => `${pos[3 * i].toFixed(4)},${pos[3 * i + 1].toFixed(4)},${pos[3 * i + 2].toFixed(4)}`;
@@ -4707,7 +4886,7 @@ function stepKenar(x, y) {
   // ekranda en yakın parça
   let en = null, enD = Infinity;
   for (const pr of parcalar) for (let i = 0; i < pr.length - 1; i++) { const a = ekranaa(pr[i]), b = ekranaa(pr[i + 1]); const dx = b[0] - a[0], dy = b[1] - a[1], L2 = dx * dx + dy * dy || 1; const t = Math.max(0, Math.min(1, ((x - a[0]) * dx + (y - a[1]) * dy) / L2)); const d = Math.hypot(x - a[0] - t * dx, y - a[1] - t * dy); if (d < enD) { enD = d; en = pr; } }
-  if (!en || enD > 45) return null;
+  if (!en || enD > (esik || 45)) return null;
   return kenarSinifla(en);
 }
 function kenarSinifla(pts) {
@@ -4758,6 +4937,7 @@ function stepKenarKenar(A, B) {
 function olcumDokun(x, y) {
   if (D.tur === 'dxf') { dxfOlcum(x, y); return; }
   const m = K.mod;
+  if (m === 'ucs') { ucsDokun(x, y); return; }
   if (m === 'kk') {
     const k = stepKenar(x, y); if (!k) { sonuc('SEÇİM', `${K.secim.length} / 2`, 'Kenar bulunamadı; bir kenarın hemen yanına dokunun.'); return; }
     if (K.secim.length >= 2) { K.secim = []; olcuTemizle(); }
@@ -4771,7 +4951,7 @@ function olcumDokun(x, y) {
     const gerek = m === 'nn' ? 2 : 3;
     if (K.secim.length >= gerek) { K.secim = []; olcuTemizle(); }
     K.secim.push(s.p); noktaEkle(s.p);
-    if (K.secim.length < gerek) { sonuc('SEÇİM', `${K.secim.length} / ${gerek}`, s.yapisti ? 'Noktaya yapıştı. Sıradakine dokunun.' : 'Sıradaki noktaya dokunun.'); return; }
+    if (K.secim.length < gerek) { const q = window.incUcs ? ucsYerel(s.p) : s.p; sonuc('SEÇİM', `${K.secim.length} / ${gerek}`, (s.yapisti ? 'Noktaya yapıştı. Sıradakine dokunun.' : 'Sıradaki noktaya dokunun.') + ` · Nokta (${window.incUcs ? 'UCS' : 'dünya'}): X ${fmt(q.x, 3)} · Y ${fmt(q.y, 3)} · Z ${fmt(q.z, 3)}`); return; }
     if (m === 'nn') iki_nokta(K.secim[0], K.secim[1]); else uc_nokta(...K.secim);
     return;
   }
@@ -4823,7 +5003,8 @@ function olcumDokun(x, y) {
 }
 function iki_nokta(a, b) {
   const d = a.distanceTo(b); cizgiEkle(a, b); etiketYaz(a.clone().add(b).multiplyScalar(.5), `${fmt(d, 2)}`);
-  const ek = D.tur === 'dxf' ? `ΔX ${fmt(Math.abs(b.x - a.x))} · ΔY ${fmt(Math.abs(b.y - a.y))}` : `ΔX ${fmt(Math.abs(b.x - a.x))} · ΔY ${fmt(Math.abs(b.y - a.y))} · ΔZ ${fmt(Math.abs(b.z - a.z))}`;
+  const u = D.tur !== 'dxf' && window.incUcs; const A = u ? ucsYerel(a) : a, B = u ? ucsYerel(b) : b;
+  const ek = D.tur === 'dxf' ? `ΔX ${fmt(Math.abs(b.x - a.x))} · ΔY ${fmt(Math.abs(b.y - a.y))}` : `${u ? 'UCS ' : ''}ΔX ${fmt(Math.abs(B.x - A.x))} · ΔY ${fmt(Math.abs(B.y - A.y))} · ΔZ ${fmt(Math.abs(B.z - A.z))}`;
   sonuc('MESAFE', `${fmt(d)} ${D.tur === 'dxf' ? D.birim : 'mm'}`, ek); D.sonOlcum = fmt(d, 4);
 }
 function uc_nokta(a, b, c) {
@@ -4832,6 +5013,107 @@ function uc_nokta(a, b, c) {
   sonuc('3 NOKTA DAİRE', `Ø ${fmt(r.R * 2)}`, `R ${fmt(r.R)} · merkez ${fmt(r.merkez.x, 2)}, ${fmt(r.merkez.y, 2)}${D.tur === 'dxf' ? '' : ', ' + fmt(r.merkez.z, 2)}`);
   D.sonOlcum = fmt(r.R * 2, 4);
 }
+
+// ===================================================================== UCS (kullanıcı koordinat sistemi) — İnceleme ve CAM ortak
+// Referans: düz yüzey (normal), düz kenar (yön; dokunulan uca yakın taraf başlangıç) ya da daire kenarı (eksen).
+// 1. referans Z'yi, 2. referans X'i verir; ikisi dik değilse UCS atanmaz.
+const UCS_DIK_TOL = 0.1;   // derece
+function ucsReferansi(x, y) {
+  const k = stepKenar(x, y, 12);
+  if (k) {
+    if (k.tip === 'dogru') {
+      const sa = ekranaa(k.a), sb = ekranaa(k.b); const yA = Math.hypot(sa[0] - x, sa[1] - y) <= Math.hypot(sb[0] - x, sb[1] - y);
+      const o = (yA ? k.a : k.b).clone(), u = yA ? k.b : k.a;
+      return { tip: 'kenar', d: u.clone().sub(o).normalize(), o, k, ad: `düz kenar ${fmt(k.L, 2)} mm` };
+    }
+    if (k.tip === 'daire' || k.tip === 'yay') {
+      const n = k.normal.clone().normalize(); const bak = kamera.position.clone().sub(k.merkez); if (n.dot(bak) < 0) n.negate();   // eksen izleyiciye doğru
+      return { tip: 'daire', d: n, o: k.merkez.clone(), k, ad: `daire ekseni Ø${fmt(2 * k.R, 2)}` };
+    }
+    return { hata: 'Eğri kenar yön vermez. Düz kenar, daire ya da düz yüzey seç.' };
+  }
+  const h = stepIsin(x, y); if (!h || !h.object.userData || !h.object.userData.yuz) return null;
+  const f = yuzBul(h); if (f < 0) return null; const yv = yuzVerisi(h.object, f);
+  if (!yv.duzlemsel || !(yv.alan > 0)) return { hata: 'Bu yüzey düz değil. Düz bir yüzey, düz kenar ya da daire seç.' };
+  return { tip: 'yuz', d: yv.normal.clone().normalize(), o: h.point.clone(), nesne: h.object, f, ad: 'düz yüzey' };
+}
+// A → Z, B → X
+function ucsIkiRef(A, B) {
+  const c = Math.abs(A.d.dot(B.d)); const aci = Math.acos(Math.min(1, c)) * 180 / Math.PI;
+  if (90 - aci > UCS_DIK_TOL) return { hata: `Seçilenler dik değil (aralarındaki açı ${fmt(aci, 3)}°). UCS atanamaz.` };
+  const z = A.d.clone().normalize(); const x = B.d.clone().addScaledVector(z, -B.d.dot(z)).normalize(); const y = new V3().crossVectors(z, x);
+  let o;
+  if (B.tip === 'kenar' && A.tip === 'kenar') {   // iki doğru: B üzerinde A'ya en yakın nokta
+    const w = B.o.clone().sub(A.o); const b = B.d.dot(A.d); const den = 1 - b * b;
+    const t = den > 1e-9 ? (b * w.dot(A.d) - w.dot(B.d)) / den : 0; o = B.o.clone().addScaledVector(B.d, t);
+  } else if (B.tip === 'kenar' || B.tip === 'daire') o = B.o.clone();
+  else if (A.tip === 'kenar' || A.tip === 'daire') o = A.o.clone();
+  else o = A.o.clone();
+  if (B.tip === 'yuz') o.addScaledVector(x, -o.clone().sub(B.o).dot(x));   // X yüzeyinin düzlemine
+  if (A.tip === 'yuz') o.addScaledVector(z, -o.clone().sub(A.o).dot(z));   // Z yüzeyinin düzlemine
+  return { o, x, y, z };
+}
+function ucsCevir(U, tur) {   // sağ el kuralı korunur
+  if (tur === 'yters') return { o: U.o, x: U.x.clone().negate(), y: U.y.clone().negate(), z: U.z };      // Z sabit, Z etrafında 180°
+  if (tur === 'zters') return { o: U.o, x: U.x, y: U.y.clone().negate(), z: U.z.clone().negate() };      // X sabit, X etrafında 180°
+  if (tur === 'z90') return { o: U.o, x: U.y.clone(), y: U.x.clone().negate(), z: U.z };                // Z etrafında +90°
+  return U;
+}
+const ucsEksenAd = v => { const A = [['X', 0], ['Y', 1], ['Z', 2]]; for (const [ad, i] of A) { const q = v.getComponent(i); if (Math.abs(Math.abs(q) - 1) < 1e-6) return (q > 0 ? '+' : '−') + ad; } return `(${[v.x, v.y, v.z].map(q => fmt(q, 3)).join('; ')})`; };
+const ucsMetin = U => `X → ${ucsEksenAd(U.x)} · Y → ${ucsEksenAd(U.y)} · Z → ${ucsEksenAd(U.z)}`;
+
+// --- İnceleme: etkin UCS ve sahnedeki üçlüsü
+let incUcs = null; const ucsGrup = new THREE.Group(); ucsGrup.renderOrder = 1000; sahne.add(ucsGrup);
+function ucsEtiketi(metin, renk) {
+  const c = document.createElement('canvas'); c.width = c.height = 64; const g = c.getContext('2d');
+  g.font = 'bold 44px system-ui,sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.lineWidth = 8; g.strokeStyle = 'rgba(6,16,30,.85)'; g.strokeText(metin, 32, 34); g.fillStyle = renk; g.fillText(metin, 32, 34);
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map: new THREE.CanvasTexture(c), depthTest: false, sizeAttenuation: false }));
+  s.scale.set(0.03, 0.03, 1); s.renderOrder = 1001; return s;
+}
+function ucsCiz() {
+  while (ucsGrup.children.length) { const c = ucsGrup.children.pop(); c.traverse(o => { if (o.geometry) o.geometry.dispose(); if (o.material) { if (o.material.map) o.material.map.dispose(); o.material.dispose(); } }); }
+  window.incUcs = incUcs;
+  if (!incUcs) { ciz(); return; }
+  const k = gorunurKutu(D.parcalar.filter(p => !p.gizli)); const L = Math.max(k.isEmpty() ? 10 : k.getSize(new V3()).length() * 0.18, 1e-3);
+  const R = [['X', incUcs.x, 0xF0524F, '#F0524F'], ['Y', incUcs.y, 0x45C266, '#45C266'], ['Z', incUcs.z, 0x4C8DF6, '#4C8DF6']];
+  for (const [ad, d, renk, css] of R) {
+    const a = new THREE.ArrowHelper(d.clone().normalize(), incUcs.o, L, renk, L * 0.2, L * 0.09);
+    a.traverse(o => { if (o.material) { o.material.depthTest = false; o.material.transparent = true; } o.renderOrder = 1000; });
+    ucsGrup.add(a);
+    const e = ucsEtiketi(ad, css); e.position.copy(incUcs.o).addScaledVector(d, L * 1.18); ucsGrup.add(e);
+  }
+  const m = new THREE.Mesh(new THREE.SphereGeometry(L * 0.045, 12, 8), new THREE.MeshBasicMaterial({ color: 0xE8EEF4, depthTest: false })); m.position.copy(incUcs.o); m.renderOrder = 1001; ucsGrup.add(m);
+  ciz();
+}
+function ucsYerel(p) {   // dünya → etkin UCS
+  if (!incUcs) return p.clone(); const v = p.clone().sub(incUcs.o); return new V3(v.dot(incUcs.x), v.dot(incUcs.y), v.dot(incUcs.z));
+}
+function ucsKaldir() { incUcs = null; ucsCiz(); }
+function ucsSonucYaz(not) {
+  const U = incUcs;
+  $('kSonuc').innerHTML = `<div class="b">UCS ATANDI</div><div class="d" style="font-size:15px">${ucsMetin(U)}</div>` +
+    `<div class="a">Orijin (dünya): ${[U.o.x, U.o.y, U.o.z].map(q => fmt(q, 3)).join('; ')}${not ? ' · ' + not : ''}</div>` +
+    `<div class="ucsDug"><button data-ucs="yters" title="Z sabit kalır; sağ el kuralı gereği X de ters döner">Y ters</button><button data-ucs="zters" title="X sabit kalır; Y de ters döner">Z ters</button><button data-ucs="z90" title="Z ekseni etrafında 90° döndür">Z ↻ 90°</button><button data-ucs="yeni">Yeniden seç</button><button data-ucs="kaldir" class="tehlikeli">Kaldır</button></div>` +
+    `<div class="a" style="opacity:.75">Ölçülerde ΔX/ΔY/ΔZ ve nokta koordinatları artık bu UCS'ye göre.</div>`;
+}
+function ucsDokun(x, y) {
+  const r = ucsReferansi(x, y);
+  if (!r) { sonuc('UCS', `${K.secim.length} / 2`, 'Modelde düz bir yüzeye ya da bir kenarın hemen yanına dokun.'); return; }
+  if (r.hata) { sonuc('UCS', `${K.secim.length} / 2`, r.hata); return; }
+  if (K.secim.length >= 2) { K.secim = []; olcuTemizle(); }
+  if (r.tip === 'yuz') yuzVurgula(r.nesne, r.f); else kenarCiz(r.k);
+  K.secim.push(r);
+  if (K.secim.length < 2) { sonuc('UCS · 1 / 2', 'Z ← ' + r.ad, 'Şimdi X yönü için buna DİK bir düz yüzey, düz kenar ya da daireye dokun.'); return; }
+  const U = ucsIkiRef(K.secim[0], K.secim[1]);
+  if (U.hata) { K.secim.pop(); olcuTemizle(); const A = K.secim[0]; if (A.tip === 'yuz') yuzVurgula(A.nesne, A.f); else kenarCiz(A.k); sonuc('UCS ATANAMADI', '⟂ değil', U.hata + ' Başka bir X referansı seç.'); return; }
+  incUcs = U; K.secim = []; olcuTemizle(); ucsCiz(); ucsSonucYaz(); bildir('UCS atandı.');
+}
+$('kSonuc').addEventListener('click', e => {
+  const b = e.target.closest('button[data-ucs]'); if (!b) return; const k = b.dataset.ucs;
+  if (k === 'kaldir') { ucsKaldir(); modSec('ucs'); bildir('UCS kaldırıldı; dünya koordinatları kullanılıyor.'); return; }
+  if (k === 'yeni') { modSec('ucs'); return; }
+  if (!incUcs) return; incUcs = ucsCevir(incUcs, k); ucsCiz(); ucsSonucYaz();
+});
 
 // --- DXF ölçümü
 function dxfDunya(x, y) {
@@ -5937,10 +6219,11 @@ function uc3B() {
   const sh = new THREE.Scene(); const kam = new THREE.PerspectiveCamera(40, 1, 0.1, 1e6); kam.up.set(0, 0, 1); kam.position.set(150, -200, 140); sh.add(kam);
   sh.add(new THREE.HemisphereLight(0xffffff, 0x445566, 1.6)); const il = new THREE.DirectionalLight(0xffffff, 1.4); il.position.set(0.4, 0.6, 1); kam.add(il);
   const kt = new THREE.SerbestKontrol(kam, rnd.domElement); kt.update();
+  const kup = gorunumKupu(el, kam, kt, () => ciz(), { ev: () => { if (typeof sigdir3B === 'function') sigdir3B(); } });
   kt.agacBul = () => { const a = document.getElementById('pAgacP'); return a && a.classList.contains('acik') ? document.getElementById('pAgac') : null; };
   const grup = new THREE.Group(); sh.add(grup);
   const eksen = new THREE.AxesHelper(30); sh.add(eksen);
-  let bekle = false; const ciz = () => { if (bekle || S.f) return; bekle = true; requestAnimationFrame(() => { bekle = false; rnd.render(sh, kam); }); };
+  let bekle = false; const ciz = () => { if (bekle || S.f) return; bekle = true; requestAnimationFrame(() => { bekle = false; rnd.render(sh, kam); kup.guncelle(); }); };
   kt.addEventListener('change', ciz);
   new ResizeObserver(() => { const w = el.clientWidth, h = el.clientHeight; if (!w || !h) return; rnd.setSize(w, h, false); kam.aspect = w / h; kam.updateProjectionMatrix(); ciz(); }).observe(el);
   // kenar seçimi (fillet/chamfer)
@@ -16754,8 +17037,11 @@ function ciz2() {
         if (!oz) s += alan('Takım ekseni', 'b.ucs.yon', { secenek: Object.entries(YON_AD), genis: true }) + alan('Tabla dönüşü', 'b.ucs.donus', { sayisal: true, secenek: [[0, '0°'], [90, '90°'], [180, '180°'], [270, '270°']] });
         else { const ac = u.aci || ['', '', ''];
           s += `<label class="camAlan">A: X etrafında (°)<input type="text" inputmode="decimal" data-aci="0" value="${ac[0]}"></label><label class="camAlan">B: Y etrafında (°)<input type="text" inputmode="decimal" data-aci="1" value="${ac[1]}"></label><label class="camAlan">C: Z etrafında (°)<input type="text" inputmode="decimal" data-aci="2" value="${ac[2]}"></label>`; }
-        s += `</div><div class="camDugmeler"><button class="ikincil" data-ucs="yuzey">Yüzeye dokun</button><button class="ikincil" data-ucs="orijin">Orijin seç</button>${oz ? `<button class="ikincil" data-ucs="x90">X +90°</button><button class="ikincil" data-ucs="zters">Z ters</button>` : ''}${i > 0 ? `<button class="ikincil camSilK" data-ucs="sil">Sil</button>` : ''}</div>`;
-        if (C.sec && C.sec.bi === i) s += `<div class="camNot" style="margin-top:6px">${C.sec.tur === 'yuzey' ? 'Takım ekseni olacak düz yüzeye dokun (yüzey normali dışa doğru Z olur).' : 'Orijin için model üzerinde bir noktaya dokun.'} <button class="ikincil" data-ucs="iptal" style="height:28px">İptal</button></div>`;
+        s += `</div><div class="camDugmeler"><button class="ikincil" data-ucs="ref" title="1. dokunuş Z (düz yüzey / düz kenar / daire), 2. dokunuş X (ona dik). Dik değilse atanmaz.">Kenar / yüzeyle</button><button class="ikincil" data-ucs="yuzey">Yüzeye dokun</button><button class="ikincil" data-ucs="orijin">Orijin seç</button>${window.incUcs ? `<button class="ikincil" data-ucs="inc" title="İnceleme'de atanan UCS'yi bu bağlamaya uygula">İnceleme UCS'si</button>` : ''}</div>`;
+        s += `<div class="camDugmeler"><button class="ikincil" data-ucs="yters" title="Z (takım ekseni) sabit kalır; sağ el kuralı gereği X de ters döner">Y ters</button><button class="ikincil" data-ucs="zters" title="X sabit kalır; Y de ters döner">Z ters</button><button class="ikincil" data-ucs="x90" title="Z ekseni etrafında 90° döndür">Z ↻ 90°</button>${i > 0 ? `<button class="ikincil camSilK" data-ucs="sil">Sil</button>` : ''}</div>`;
+        { const M = Cam.ucsMatrisi(u); const ad = q => { for (let j = 0; j < 3; j++) if (Math.abs(Math.abs(q[j]) - 1) < 1e-6) return (q[j] > 0 ? '+' : '−') + 'XYZ'[j]; return '(' + q.map(w => sayi(w, 3)).join('; ') + ')'; };
+          s += `<div class="camBilgi" style="margin:6px 2px 0">Eksenler (dünyada): X → ${ad(M[0])} · Y → ${ad(M[1])} · Z → ${ad(M[2])}</div>`; }
+        if (C.sec && C.sec.bi === i) s += `<div class="camNot" style="margin-top:6px">${C.sec.tur === 'yuzey' ? 'Takım ekseni olacak düz yüzeye dokun (yüzey normali dışa doğru Z olur).' : C.sec.tur === 'ref' ? (C.sec.refs && C.sec.refs.length ? `Z ← ${esc(C.sec.refs[0].ad)}. Şimdi X için buna DİK düz yüzey / düz kenar / daireye dokun.` : 'Z (takım ekseni) için düz yüzey, düz kenar ya da daireye dokun. Kenarda dokunduğun uç orijin olur.') : 'Orijin için model üzerinde bir noktaya dokun.'} <button class="ikincil" data-ucs="iptal" style="height:28px">İptal</button></div>`;
         if (oz && u.o) s += `<div class="camBilgi" style="margin:6px 2px 0">Orijin (dünya): ${u.o.map(q => sayi(q, 2)).join('; ')}</div>`;
       }
       s += `</div>`;
@@ -17126,6 +17412,14 @@ function camDokun(x, y) {
   if (!C.sec) return;
   const h = stepIsin(x, y); if (!h) { bildir('Model üzerine dokun.'); return; }
   const bb = C.ayar.baglamalar[C.sec.bi]; if (!bb) { C.sec = null; return; }
+  if (C.sec.tur === 'ref') {
+    const r = ucsReferansi(x, y); if (!r) { bildir('Düz bir yüzeye ya da bir kenarın hemen yanına dokun.'); return; } if (r.hata) { bildir(r.hata, 3500); return; }
+    const L = C.sec.refs || (C.sec.refs = []); L.push(r);
+    if (L.length < 2) { bildir('Z ← ' + r.ad + '. Şimdi X için dik bir referans seç.', 3000); ciz2(); return; }
+    const U = ucsIkiRef(L[0], L[1]); if (U.hata) { L.pop(); bildir(U.hata, 4500); ciz2(); return; }
+    bb.ucs = { tip: 'ozel', x: U.x.toArray(), z: U.z.toArray(), o: U.o.toArray().map(v => Math.round(v * 1e4) / 1e4), aci: null };
+    bildir('UCS atandı: Z ← ' + L[0].ad + ', X ← ' + L[1].ad + '.', 3500); C.sec = null; degisti(true); ciz2(); return;
+  }
   const P = h.point.toArray().map(v => Math.round(v * 1e4) / 1e4);
   if (C.sec.tur === 'orijin') { const M = Cam.ucsMatrisi(bb.ucs); bb.ucs = { tip: 'ozel', x: M[0], z: M[2], o: P, aci: bb.ucs.tip === 'ozel' ? bb.ucs.aci || null : null }; bildir('UCS orijini ayarlandı.'); }
   else {
@@ -17212,12 +17506,17 @@ $('camIc').addEventListener('click', e => {
   }
   if (b.dataset.ucs) {
     const k = b.dataset.ucs; const bi = C.aktif; const bb = B_();
-    if (k === 'yuzey' || k === 'orijin') { C.sec = { tur: k, bi }; bildir(k === 'yuzey' ? 'Takım ekseni olacak düz yüzeye dokun.' : 'Orijin için modele dokun.', 3000); ciz2(); return; }
+    if (k === 'yuzey' || k === 'orijin' || k === 'ref') { C.sec = { tur: k, bi, refs: [] }; bildir(k === 'yuzey' ? 'Takım ekseni olacak düz yüzeye dokun.' : k === 'ref' ? 'Z için düz yüzey / düz kenar / daireye dokun.' : 'Orijin için modele dokun.', 3000); ciz2(); return; }
+    if (k === 'inc') { const U = window.incUcs; if (!U) return; bb.ucs = { tip: 'ozel', x: U.x.toArray(), z: U.z.toArray(), o: U.o.toArray().map(v => Math.round(v * 1e4) / 1e4), aci: null }; C.sec = null; bildir('İnceleme UCS\'si bağlamaya uygulandı.'); degisti(true); ciz2(); return; }
+    const hz = !bb.ucs || bb.ucs.tip !== 'ozel';
+    if (hz && (k === 'yters' || k === 'x90')) { bb.ucs = Object.assign({ yon: '+Z', donus: 0 }, bb.ucs, { tip: 'hazir' }); bb.ucs.donus = ((bb.ucs.donus || 0) + (k === 'yters' ? 180 : 90)) % 360; degisti(true); ciz2(); return; }
     if (k === 'iptal') { C.sec = null; ciz2(); return; }
     if (k === 'sil') { C.ayar.baglamalar.splice(bi, 1); C.aktif = Math.max(0, bi - 1); C.sec = null; degisti(true); ciz2(); return; }
     const M = Cam.ucsMatrisi(bb.ucs);
-    if (k === 'x90') bb.ucs = Object.assign({}, bb.ucs, { x: M[1], aci: null });
-    if (k === 'zters') bb.ucs = Object.assign({}, bb.ucs, { z: M[2].map(q => -q), x: M[0], aci: null });
+    const oz = bb.ucs && bb.ucs.tip === 'ozel' ? bb.ucs : { tip: 'ozel', o: null, aci: null };
+    if (k === 'x90') bb.ucs = Object.assign({}, oz, { tip: 'ozel', x: M[1], z: M[2], aci: null });
+    if (k === 'zters') bb.ucs = Object.assign({}, oz, { tip: 'ozel', z: M[2].map(q => -q), x: M[0], aci: null });
+    if (k === 'yters') bb.ucs = Object.assign({}, oz, { tip: 'ozel', z: M[2], x: M[0].map(q => -q), aci: null });
     degisti(true); ciz2(); return;
   }
   if (b.id === 'camTakimEkle') { const no = Math.max(0, ...C.ayar.takimlar.map(t => t.no)) + 1; C.ayar.takimlar.push({ no, tip: 'parmak', d: 8, z: 3, ad: 'Parmak freze Ø8' }); degisti(false); ciz2(); return; }
@@ -17325,6 +17624,7 @@ $('camIc').addEventListener('click', e => {
   grup('inceleme', 'Model', [
     etiketle($('btnAgac'), 'Ağaç', 'Ürün ağacı'),
     etiketle($('btnKumpas'), 'Ölçü', 'Kumpas: mesafe, açı, çap ölç'),
+    vekil('UCS', 'UCS ata: düz yüzey / kenar seçerek koordinat sistemi', 'M5 19V5M5 19h14M5 19l8-8M3 7l2-2 2 2M17 17l2 2-2 2', 'mUcs'),
     vekil('Kenar', 'Kenar çizgileri aç / kapat', IK.kafes, 'mKenar'),
     vekil('Resim', 'Görüntüyü kaydet (PNG)', IK.resim, 'mPng'),
     vekil('Düzenle', 'Bu STEP\'i Tasarım\'da düzenle', IK.taslak, 'mDuzenle')
