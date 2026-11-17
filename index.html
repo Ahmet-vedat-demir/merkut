@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr" data-surum="0.2.75 (web)">
+<html lang="tr" data-surum="0.2.78 (web)">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
@@ -27,6 +27,13 @@ button{font:inherit;color:inherit}
 .ib{width:42px;height:42px;border-radius:10px;border:1px solid transparent;background:transparent;display:grid;place-items:center;cursor:pointer;flex:0 0 auto}
 .ib svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .ib:active{background:var(--panel2)}
+/* kaydırma çubukları: uygulama paletine uygun ince koyu çubuk (beyaz varsayılan yerine) */
+*{scrollbar-width:thin;scrollbar-color:#2E557F transparent}
+::-webkit-scrollbar{width:8px;height:8px;background:transparent}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#2E557F;border-radius:8px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:#2EC4C6;background-clip:padding-box}
+::-webkit-scrollbar-corner,::-webkit-scrollbar-button{display:none;background:transparent}
 .ib.acik{background:rgba(46,196,198,.16);border-color:var(--vurgu);color:var(--vurgu2)}
 .ib:disabled{opacity:.35}
 .birincil{background:var(--vurgu);color:#0A1628;border:none;border-radius:10px;font-weight:700;padding:0 14px;height:40px;display:flex;align-items:center;gap:6px;cursor:pointer}
@@ -286,7 +293,7 @@ body.camAcik #bildirim{bottom:calc(var(--camPx,var(--alt)) + 10px)}
 .skCubuk label{display:flex;flex-direction:column;gap:2px;font-size:10.5px;color:var(--soluk);flex:1 1 90px;min-width:84px}
 .skCubuk input{height:34px;border-radius:8px;border:1px solid var(--kenar);background:var(--panel2);color:#fff;font:600 15px system-ui,sans-serif;padding:0 8px;width:100%;box-sizing:border-box}
 #skKisit.acik+#skSayi.acik{bottom:calc(env(safe-area-inset-bottom,0px) + 64px)}
-#skSvg{position:absolute;inset:0;width:100%;height:100%}
+#skSvg,#skIzg{position:absolute;inset:0;width:100%;height:100%}#skIzg{pointer-events:none}
 #skAlan canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .pPanel{display:none;background:var(--panel);border-bottom:1px solid var(--kenar);padding:8px 10px 10px;max-height:45vh;overflow:auto}
 .pPanel.acik{display:block}
@@ -428,7 +435,7 @@ input[type=file]{display:none}
 .yardimBtn{width:40px!important;height:40px!important;border-radius:50%!important;background:#2EC4C6!important;color:#0A1628!important;font:700 21px/1 system-ui,sans-serif!important}
 #sahne{background:var(--sahne-arka,radial-gradient(120% 90% at 50% 0%,#1A3354 0%,#0D1D33 58%,#081324 100%))}
 #p3B{background:var(--sahne-arka,radial-gradient(120% 90% at 50% 0%,#1A3354 0%,#0D1D33 58%,#081324 100%))}
-#sahne::after{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(46,196,198,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(46,196,198,.05) 1px,transparent 1px);background-size:36px 36px}
+#sahne canvas{position:relative}#sahne::before{content:"";position:absolute;inset:0;pointer-events:none;background-image:linear-gradient(rgba(46,196,198,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(46,196,198,.05) 1px,transparent 1px);background-size:36px 36px}
 
 /* Araç şeridi (eski alt çubuk) */
 #aracSerit{bottom:var(--nav);height:var(--serit);padding:2px 6px 0;justify-content:flex-start;align-items:stretch;gap:4px;overflow-x:auto;overflow-y:hidden;background:#12263F;border-top:1px solid #1F3A5C;scrollbar-width:none;touch-action:pan-x}
@@ -780,7 +787,7 @@ body.masaustu #kumpas{max-width:380px}
   <div class="pArac" id="skAraclar"></div>
   <div id="skBilgi"></div>
   <div id="skPanel" class="pPanel"></div>
-  <div id="skAlan"><svg id="skSvg"></svg><div id="skLup"><svg></svg></div><input id="skDeger" inputmode="decimal" autocomplete="off"><div id="skKisit" class="skCubuk"></div><div id="skSayi" class="skCubuk"></div></div>
+  <div id="skAlan"><svg id="skIzg"></svg><svg id="skSvg"></svg><div id="skLup"><svg></svg></div><input id="skDeger" inputmode="decimal" autocomplete="off"><div id="skKisit" class="skCubuk"></div><div id="skSayi" class="skCubuk"></div></div>
 </section>
 <div id="pForm"><div class="kart" id="pFormKart"><h3 id="pFormBaslik"></h3><div id="pFormIc"></div><div class="dugmeler"><button id="pFormIptal">İptal</button><button class="birincil" id="pFormTamam">Tamam</button></div></div></div>
 <div id="bSoru"><div class="kart"><h3 id="bSoruBaslik"></h3><p id="bSoruMetin"></p><input id="bSoruGirdi"><div id="bSoruDugmeler"></div></div></div>
@@ -6813,7 +6820,7 @@ function duzlemVek(f) {
 // Sketch ekranında parça, sketch düzlemine dik bakışla ızgaranın arkasında çizilir.
 function sk3B() {
   if (!S.f || !R3) return; const V = R3; const A = skAlan(); const W = A.clientWidth, H = A.clientHeight; if (!W || !H) return;
-  if (V.rnd.domElement.parentNode !== A) { A.insertBefore(V.rnd.domElement, A.firstChild); V.kt.enabled = false; }
+  if (V.rnd.domElement.nextSibling !== $('skSvg')) { A.insertBefore(V.rnd.domElement, $('skSvg')); V.kt.enabled = false; }   // sıra: ızgara → parça → çizim
   V.rnd.setSize(W, H, false);
   const { n, x, y, O } = duzlemVek(S.f); const D = 1e5;
   const k = V.orto; k.left = -S.tx / S.s; k.right = (W - S.tx) / S.s; k.top = S.ty / S.s; k.bottom = (S.ty - H) / S.s; k.near = 1; k.far = 2 * D;
@@ -7028,7 +7035,8 @@ function skCiz() {
   // çok sıklaşınca yavaşça kaybolup bir üst kademeye (10 kat) geçer. Ölçek sol altta yazar.
   const kucuk = Math.pow(10, Math.ceil(Math.log10(8 / S.s) - 1e-9));   // ince kare ekranda 8–80 px
   const kpx = kucuk * S.s; const incOp = Math.max(0, Math.min(1, (kpx - 8) / 22)) * 0.38;
-  const g0 = el('g', { stroke: '#2A4B74', 'stroke-width': 1 }, svg);
+  const izg = $('skIzg'); izg.innerHTML = ''; izg.setAttribute('viewBox', `0 0 ${R.width} ${R.height}`);
+  const g0 = el('g', { stroke: '#2A4B74', 'stroke-width': 1 }, izg);   // ızgara parçanın ARKASINDA (ayrı katman)
   const cizIzg = (ad, op, kal) => { if (op <= 0.01) return;
     for (let x = Math.floor(x0 / ad) * ad; x <= x1; x += ad) { if (Math.abs(x) < ad * 1e-6) continue; const a = ekr(x, 0)[0]; el('line', { x1: a, y1: 0, x2: a, y2: R.height, 'stroke-opacity': op, 'stroke-width': kal }, g0); }
     for (let y = Math.floor(y0 / ad) * ad; y <= y1; y += ad) { if (Math.abs(y) < ad * 1e-6) continue; const a = ekr(0, y)[1]; el('line', { x1: 0, y1: a, x2: R.width, y2: a, 'stroke-opacity': op, 'stroke-width': kal }, g0); } };
@@ -7443,7 +7451,7 @@ function olcuDokun(w) {
 function lup(x, y, ac) {
   const L = $('skLup'); if (!ac) { L.classList.remove('acik'); return; }
   const R = skAlan().getBoundingClientRect(); const lx = x - R.left, ly = y - R.top;
-  const svg = L.firstElementChild; svg.innerHTML = $('skSvg').innerHTML; const z = 2.2, w = 120 / z;
+  const svg = L.firstElementChild; svg.innerHTML = $('skIzg').innerHTML + $('skSvg').innerHTML; const z = 2.2, w = 120 / z;
   svg.setAttribute('viewBox', `${lx - w / 2} ${ly - w / 2} ${w} ${w}`);
   el('line', { x1: lx - 6, y1: ly, x2: lx + 6, y2: ly, stroke: '#F2B233', 'stroke-width': 0.8 }, svg); el('line', { x1: lx, y1: ly - 6, x2: lx, y2: ly + 6, stroke: '#F2B233', 'stroke-width': 0.8 }, svg);
   L.style.left = Math.min(R.width - 128, Math.max(4, lx - 60)) + 'px'; L.style.top = Math.max(4, ly - 175) + 'px'; L.classList.add('acik');
