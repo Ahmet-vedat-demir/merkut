@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr" data-surum="0.2.86 (web)">
+<html lang="tr" data-surum="0.2.88 (web)">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
@@ -45,6 +45,8 @@ button{font:inherit;color:inherit}
 .gkSvg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
 .gkArka{z-index:0}.gkOn{z-index:2}
 .gkSvg text{font:800 10px system-ui,sans-serif;paint-order:stroke;stroke:rgba(6,16,30,.85);stroke-width:2.6px}
+.gkKz{position:absolute;width:24%;height:24%;display:block;cursor:pointer;z-index:1}.gkKz.vur{background:#2EC4C6}
+.gkYuz:has(.gkKz:hover){background:rgba(22,48,80,.93);color:#D6EEF5}
 .gkKose{fill:#E8EEF4;stroke:#0A1628;stroke-width:1}
 .gkEv{position:absolute;left:-30px;bottom:0;width:24px;height:24px;border-radius:7px;border:1px solid var(--kenar);background:rgba(13,29,51,.88);color:#9FD8E0;padding:4px;display:flex;cursor:pointer;z-index:3}
 .gkUcs{display:none;position:absolute;right:-4px;top:-6px;font:800 9px/1 system-ui,sans-serif;color:#04202A;background:#F2A65A;border-radius:5px;padding:3px 4px;z-index:3;pointer-events:none}.gKup.ucsli .gkUcs{display:block}
@@ -3678,7 +3680,10 @@ function gorunumKupu(kap, kam, kt, yenile, opt) {
   ];
   const el = document.createElement('div'); el.className = 'gKup'; el.setAttribute('aria-label', 'Görünüm küpü');
   el.innerHTML = '<svg class="gkSvg gkArka"></svg><div class="gkMerkez"><div class="gkKutu">' +
-    YUZ.map(([k, ad]) => `<div class="gkYuz" data-y="${k}" title="${ad.charAt(0) + ad.slice(1).toLocaleLowerCase('tr')} görünüm"><span>${ad}</span></div>`).join('') +
+    YUZ.map(([k, ad, n, u, v]) => `<div class="gkYuz" data-y="${k}" title="${ad.charAt(0) + ad.slice(1).toLocaleLowerCase('tr')} görünüm"><span>${ad}</span>` +
+      // NX gibi: her yüzün köşesinde gizli küçük kare; aynı köşeyi paylaşan 3 yüzdeki kareler birlikte vurgulanır
+      [[-1, -1], [1, -1], [-1, 1], [1, 1]].map(([a, b]) => { const w = [0, 1, 2].map(i => n[i] + a * u[i] + b * v[i]);
+        return `<i class="gkKz" data-k="${w.join(',')}" style="${a < 0 ? 'left' : 'right'}:0;${b < 0 ? 'top' : 'bottom'}:0"></i>`; }).join('') + '</div>').join('') +
     '</div></div><svg class="gkSvg gkOn"></svg><span class="gkUcs" title="Küp etkin UCS’ye göre: yüzlere dokununca UCS yönlerinden bakar">UCS</span><button class="gkEv" title="İzometrik görünüm (ana görünüm)" aria-label="İzometrik görünüm"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7M6 9.5V20h12V9.5"/></svg></button>';
   kap.appendChild(el);
   const kutu = el.querySelector('.gkKutu'), svgA = el.querySelector('.gkArka'), svgO = el.querySelector('.gkOn');
@@ -3775,6 +3780,10 @@ function gorunumKupu(kap, kam, kt, yenile, opt) {
     yoneBak(dunya(...n), dunya(...up), opt.bakti ? () => opt.bakti(k) : null);
   }
 
+  function koseyeBak(k) {   // k = [±1, ±1, ±1] küp çerçevesinde
+    const n = new THREE.Vector3(...dunya(...k)).normalize();
+    yoneBak(n.toArray(), dunya(0, 0, 1), opt.bakti ? () => opt.bakti('kose') : null);
+  }
   // olaylar: dokun = yüze bak, sürükle = modeli döndür
   let bas = null, surukle = false;
   el.addEventListener('pointerdown', ev => {
@@ -3792,11 +3801,17 @@ function gorunumKupu(kap, kam, kt, yenile, opt) {
     if (!bas || ev.pointerId !== bas.id) return;
     const s = surukle; bas = null; surukle = false; el.classList.remove('surukle');
     if (s || ev.type === 'pointercancel') return;
-    const t = document.elementFromPoint(ev.clientX, ev.clientY); const y = t && t.closest && t.closest('.gkYuz');
+    const t = document.elementFromPoint(ev.clientX, ev.clientY);
+    const kt2 = t && t.closest && t.closest('.gkKz');
+    if (kt2 && el.contains(kt2)) { koseyeBak(kt2.dataset.k.split(',').map(Number)); return; }
+    const y = t && t.closest && t.closest('.gkYuz');
     if (y && el.contains(y)) yuzeBak(y.dataset.y);
   };
   el.addEventListener('pointerup', birak); el.addEventListener('pointercancel', birak);
   el.addEventListener('wheel', ev => ev.stopPropagation(), { passive: true });
+  // köşe vurgusu (fareyle üstüne gelince üç yüzdeki kare birlikte yanar)
+  el.addEventListener('pointerover', ev => { const z = ev.target.closest && ev.target.closest('.gkKz'); el.querySelectorAll('.gkKz.vur').forEach(q => q.classList.remove('vur')); if (z && ev.pointerType === 'mouse') el.querySelectorAll(`.gkKz[data-k="${z.dataset.k}"]`).forEach(q => q.classList.add('vur')); });
+  el.addEventListener('pointerleave', () => el.querySelectorAll('.gkKz.vur').forEach(q => q.classList.remove('vur')));
   el.querySelector('.gkEv').addEventListener('click', ev => {
     ev.stopPropagation();
     const n = new THREE.Vector3(...dunya(1, -1, 0.8)).normalize();
@@ -3816,7 +3831,7 @@ function gorunumKupu(kap, kam, kt, yenile, opt) {
     if (up.lengthSq() < 1e-9) up.set(0, 1, 0); up.normalize();
     yoneBak(n.toArray(), up.toArray(), null, P.clone());
   }
-  return { el, guncelle, yuzeBak, yoneBak, normaleBak };
+  return { el, guncelle, yuzeBak, yoneBak, normaleBak, koseyeBak };
 }
 
 
