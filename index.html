@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr" data-surum="0.2.81 (web)">
+<html lang="tr" data-surum="0.2.86 (web)">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
@@ -418,6 +418,7 @@ body.camAcik #bildirim{bottom:calc(var(--camPx,var(--alt)) + 10px)}
 #ayarlar .ayAnah::after{content:'';position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#EAF1F8;transition:left .15s}
 #ayarlar .ayAnah.on{background:var(--vurgu)}
 #ayarlar .ayAnah.on::after{left:23px}
+#ayarlar .aySecim{flex:none;display:flex;border:1px solid var(--kenar);border-radius:9px;overflow:hidden}#ayarlar .aySecim button{height:32px;padding:0 11px;border:0;background:var(--panel2);color:var(--metin2,#9FB3C8);font-size:12.5px;cursor:pointer}#ayarlar .aySecim button+button{border-left:1px solid var(--kenar)}#ayarlar .aySecim button.on{background:rgba(46,196,198,.22);color:var(--vurgu2);font-weight:600}
 #ayarlar .ayDeger{flex:none;min-width:74px;height:32px;border-radius:9px;border:1px solid var(--kenar);background:var(--panel2);color:var(--vurgu2);font-size:13px;padding:0 10px}
 #ayarlar .ayArka{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:2px 0 10px}
 #ayarlar .ayArka button{height:58px;border-radius:10px;border:2px solid transparent;position:relative;overflow:hidden;color:#fff;font-size:11px;display:flex;align-items:flex-end;justify-content:center;padding-bottom:5px;text-shadow:0 1px 2px #000}
@@ -848,6 +849,7 @@ body.masaustu #kumpas{max-width:380px}
     <h3>Görünüm</h3>
     <div class="ayS"><span>3B arka plan<small>İnceleme, CAM ve Tasarım 3B görünümü</small></span></div>
     <div class="ayArka" id="ayArka"></div>
+    <div class="ayS"><span>Görünüm türü<small>Perspektif: uzaktaki küçük görünür · Paralel: ölçek her derinlikte aynı (CATIA'daki Parallel)</small></span><div class="aySecim" id="ayIzdusum"><button data-v="perspektif">Perspektif</button><button data-v="paralel">Paralel</button></div></div>
     <label class="ayS"><span>Kenar çizgileri<small>Parçanın kenarlarını çizer (çok büyük modellerde kendiliğinden kapanır)</small></span><button class="ayAnah" data-ayar="kenar"></button></label>
     <div class="ayS"><span>STEP kalitesi<small>Yüksek: daha pürüzsüz ama daha yavaş açılır</small></span><button class="ayDeger" id="ayKalite"></button></div>
     <h3>Arayüz ve fare</h3>
@@ -3637,6 +3639,29 @@ if (typeof module !== 'undefined') module.exports = DXF;
 const $ = id => document.getElementById(id);
 const V3 = THREE.Vector3;
 
+// ===================================================================== İZDÜŞÜM: PERSPEKTİF / PARALEL (CATIA: View → Render Style)
+// Paralel görünümde kamera nesnesi aynı kalır (kontroller, sığdır, küp değişmeden çalışır); her çizimde izdüşüm matrisi
+// hedef uzaklığındaki görüş alanına eşit bir ortografik matrisle değiştirilir. Yakınlaşma = kamerayı yaklaştırmak → çerçeve küçülür.
+function paralelMi() { return (window.hnlAyar || {}).izdusum === 'paralel'; }
+function projeksiyonUygula(kam, hedef) {
+  if (!paralelMi()) { if (kam.userData.paralel) { kam.userData.paralel = false; kam.updateProjectionMatrix(); } return; }
+  const d = Math.max(kam.position.distanceTo(hedef), 1e-6);
+  const h = d * Math.tan(kam.fov * Math.PI / 360) / (kam.zoom || 1), w = h * kam.aspect;
+  const far = Math.max(kam.far, d * 1.001), near = 2 * d - far;   // hedefin iki yanı simetrik: kamera modelin içindeyken de kesilmez
+  kam.projectionMatrix.makeOrthographic(-w, w, h, -h, near, far); kam.projectionMatrixInverse.copy(kam.projectionMatrix).invert();
+  kam.userData.paralel = true;
+}
+// Işın seçimi: paralel izdüşümde ışınlar kameranın bakış yönüne paraleldir
+(function () {
+  const asil = THREE.Raycaster.prototype.setFromCamera;
+  THREE.Raycaster.prototype.setFromCamera = function (c, kam) {
+    if (kam && kam.isPerspectiveCamera && kam.userData && kam.userData.paralel) {
+      this.ray.origin.set(c.x, c.y, -1).unproject(kam); this.ray.direction.set(0, 0, -1).transformDirection(kam.matrixWorld); this.camera = kam; return;
+    }
+    return asil.call(this, c, kam);
+  };
+})();
+
 // ===================================================================== GÖRÜNÜM KÜPÜ (NX tarzı)
 // Sağ altta küçük küp + köşesinden kenarları boyunca çıkan X/Y/Z okları. Kamerayla birlikte döner.
 // Yüze dokun → o yüze dik bakış (yumuşak geçiş). Küpü sürükle → modeli döndür. ⌂ → izometrik.
@@ -3844,7 +3869,7 @@ function kirpmaAyarla() {
   const near = Math.max(d - R * 1.6, Math.max(R, d) / 20000, 1e-4);
   if (Math.abs(kamera.far - far) > far * 1e-3 || Math.abs(kamera.near - near) > near * 1e-3) { kamera.near = near; kamera.far = far; kamera.updateProjectionMatrix(); }
 }
-function ciz() { if (cizBekliyor) return; cizBekliyor = true; requestAnimationFrame(() => { cizBekliyor = false; if (window.pmiOncesi) pmiOncesi(); kirpmaAyarla(); renderer.render(sahne, kamera); gorKup.guncelle(); etiketGuncelle(); if (window.balonCiz) balonCiz(); }); }
+function ciz() { if (cizBekliyor) return; cizBekliyor = true; requestAnimationFrame(() => { cizBekliyor = false; if (window.pmiOncesi) pmiOncesi(); kirpmaAyarla(); projeksiyonUygula(kamera, kontrol.target); renderer.render(sahne, kamera); gorKup.guncelle(); etiketGuncelle(); if (window.balonCiz) balonCiz(); }); }
 function boyutla() {
   const w = sahneEl.clientWidth, h = sahneEl.clientHeight; if (!w || !h) return;
   renderer.setSize(w, h, false); kamera.aspect = w / h; kamera.updateProjectionMatrix(); ciz();
@@ -3876,12 +3901,17 @@ function hexStr(c) { return '#' + c.getHexString(); }
 
 // ===================================================================== MOTOR (WORKER)
 let wasmBytes = null;
+// Gömülü ikili veri: APK / açık sitede base64 olarak sayfanın içinde; özel sitede ayrı .wasm dosyası (data-src) olarak gelir
+async function gomuluIkili(id) {
+  const el = $(id);
+  if (el.dataset.src) { const r = await fetch(el.dataset.src); if (!r.ok) throw new Error(el.dataset.src + ' indirilemedi (' + r.status + ')'); return new Uint8Array(await r.arrayBuffer()); }
+  const ikili = atob(el.textContent.trim()); const u = new Uint8Array(ikili.length);
+  for (let i = 0; i < ikili.length; i++) u[i] = ikili.charCodeAt(i);
+  el.textContent = ''; return u;
+}
 async function wasmHazirla() {
   if (wasmBytes) return wasmBytes;
-  const b64 = $('wasm64').textContent.trim();
-  const ikili = atob(b64); const u = new Uint8Array(ikili.length);
-  for (let i = 0; i < ikili.length; i++) u[i] = ikili.charCodeAt(i);
-  wasmBytes = u; $('wasm64').textContent = '';
+  wasmBytes = await gomuluIkili('wasm64');
   return wasmBytes;
 }
 let workerUrl = null, agacUrl = null, wasmModul = null, hazirIsci = null;
@@ -4615,7 +4645,7 @@ window.arkaPlanSiradaki = () => { let cur = 'lacivert'; try { cur = localStorage
 try { arkaPlanUygula(localStorage.getItem('hnlArka') || 'lacivert'); } catch (e) { arkaPlanUygula('lacivert'); }
 $('mArka').onclick = () => { const ad = window.arkaPlanSiradaki(); bildir('Arka plan: ' + ad, 1400); };
 // ---- Ayarlar (görünüm, taslak, tasarım); window.hnlAyar diğer modüllerden okunur
-const AYAR_VARSAYILAN = { izgara: true, yapis: true, yon: true, g1: true, otoKayit: true, arayuz: 'oto', fare: 'merkut', tekerTers: false };
+const AYAR_VARSAYILAN = { izdusum: 'perspektif', izgara: true, yapis: true, yon: true, g1: true, otoKayit: true, arayuz: 'oto', fare: 'merkut', tekerTers: false };
 window.hnlAyar = Object.assign({}, AYAR_VARSAYILAN);
 try { Object.assign(window.hnlAyar, JSON.parse(localStorage.getItem('hnlAyar') || '{}')); } catch (e) {}
 function ayarKaydet() { try { localStorage.setItem('hnlAyar', JSON.stringify(window.hnlAyar)); } catch (e) {} }
@@ -4632,6 +4662,7 @@ function ayarlarYaz() {
   const A = window.hnlAyar;
   document.querySelectorAll('#ayarlar .ayAnah').forEach(b => { const k = b.dataset.ayar; b.classList.toggle('on', k === 'kenar' ? !!D.kenar : !!A[k]); });
   $('ayKalite').textContent = $('mKaliteD').textContent;
+  document.querySelectorAll('#ayIzdusum button').forEach(b => b.classList.toggle('on', b.dataset.v === (A.izdusum || 'perspektif')));
   $('ayArayuz').textContent = { oto: 'Otomatik', telefon: 'Telefon', masaustu: 'Masaüstü' }[A.arayuz || 'oto'];
   const FP = FARE_ACIKLAMA[A.fare || 'merkut']; $('ayFare').textContent = FP[0]; $('ayFareA').textContent = FP[1];
   let cur = 'lacivert'; try { cur = localStorage.getItem('hnlArka') || 'lacivert'; } catch (e) {}
@@ -4651,6 +4682,11 @@ document.querySelectorAll('#ayarlar .ayAnah').forEach(b => b.onclick = e => {
   else { window.hnlAyar[k] = !window.hnlAyar[k]; ayarKaydet(); if (window.parcaTest && window.parcaTest.skCiz && window.parcaTest.S && window.parcaTest.S.M) try { window.parcaTest.skCiz(); } catch (er) {} }
   ayarlarYaz();
 });
+document.querySelectorAll('#ayIzdusum button').forEach(b => b.onclick = e => {
+  e.preventDefault(); window.hnlAyar.izdusum = b.dataset.v; ayarKaydet(); ayarlarYaz(); izdusumYenile();
+  bildir(b.dataset.v === 'paralel' ? 'Paralel görünüm' : 'Perspektif görünüm', 1200);
+});
+function izdusumYenile() { ciz(); try { const R = window.parcaTest && window.parcaTest.R3; if (R) R.ciz(); } catch (e) {} }
 $('ayKalite').onclick = () => { $('mKalite').click(); setTimeout(ayarlarYaz, 50); };
 const FARE_ACIKLAMA = {
   merkut: ['Merküt', 'Sol: döndür · Sağ/Orta: kaydır · Ctrl+Sol: kaydır · Shift+Sol: yakınlaş'],
@@ -4722,7 +4758,7 @@ function indir(blob, ad) {
 const adKok = () => (D.ad || 'model').replace(/\.[^.]+$/, '');
 $('mPng').onclick = () => {
   menuKapat(); if (!D.parcalar.length) return;
-  renderer.render(sahne, kamera);
+  projeksiyonUygula(kamera, kontrol.target); renderer.render(sahne, kamera);
   const c = document.createElement('canvas'); c.width = renderer.domElement.width; c.height = renderer.domElement.height;
   const x = c.getContext('2d'); const g = x.createLinearGradient(0, 0, 0, c.height); g.addColorStop(0, '#3C4C64'); g.addColorStop(1, '#11161D');
   x.fillStyle = g; x.fillRect(0, 0, c.width, c.height); x.drawImage(renderer.domElement, 0, 0);
@@ -6074,8 +6110,7 @@ self.onmessage = async (ev) => {
     if (v.dosya) { M.HnlCad.dosyaYaz(v.dosya, v.veri); return; }
   } catch (e) { self.postMessage({ hata: String(e && e.message || e), no: v.no }); }
 };`], { type: 'text/javascript' }));
-    if (!wasmB) { const b = atob($('hnlcadWasm').textContent.trim()); wasmB = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) wasmB[i] = b.charCodeAt(i); $('hnlcadWasm').textContent = ''; }
-    isciYap().then(I => { P.isciler = [I]; P.isci = I.w; coz(I.w);
+    (wasmB ? Promise.resolve() : gomuluIkili('hnlcadWasm').then(u => { wasmB = u; })).then(() => isciYap()).then(I => { P.isciler = [I]; P.isci = I.w; coz(I.w);
       for (let i = 1; i < ISCI_SAY; i++) isciYap().then(J => { P.isciler.push(J); siradakini(); }).catch(() => {});
     }, red);
   });
@@ -6244,6 +6279,7 @@ function form(baslik, alanlar, dugmeYazi = 'Tamam', ops = {}) {
   });
 }
 // seçenekler düğme olarak
+window.pdSecim = (b, l) => secim(b, l);
 function secim(baslik, secenekler) {
   let secilen = null;
   const p = form(baslik, [], null); const ic = $('pFormIc'); const kutu = document.createElement('div'); kutu.className = 'pSecenek';
@@ -6268,7 +6304,7 @@ function uc3B() {
   kt.agacBul = () => { const a = document.getElementById('pAgacP'); return a && a.classList.contains('acik') ? document.getElementById('pAgac') : null; };
   const grup = new THREE.Group(); sh.add(grup);
   const eksen = new THREE.AxesHelper(30); sh.add(eksen);
-  let bekle = false; const ciz = () => { if (bekle || S.f) return; bekle = true; requestAnimationFrame(() => { bekle = false; rnd.render(sh, kam); kup.guncelle(); }); };
+  let bekle = false; const ciz = () => { if (bekle || S.f) return; bekle = true; requestAnimationFrame(() => { bekle = false; projeksiyonUygula(kam, kt.target); rnd.render(sh, kam); kup.guncelle(); }); };
   kt.addEventListener('change', ciz);
   new ResizeObserver(() => { const w = el.clientWidth, h = el.clientHeight; if (!w || !h) return; rnd.setSize(w, h, false); kam.aspect = w / h; kam.updateProjectionMatrix(); ciz(); }).observe(el);
   // kenar seçimi (fillet/chamfer)
@@ -17777,7 +17813,18 @@ $('camIc').addEventListener('click', e => {
       const p3 = $('p3Mbd');
       if (acikMi('p3Bar') && p3 && p3.style.display !== 'none') p3.click(); else $('mBalon').click();
     } else if (m === 'cam') $('mCam').click();
-    else if (m === 'pd') $('mParca').click();
+    else if (m === 'pd') {
+      // açık bir STEP (parça ya da takım) varsa sor: onu mu düzenleyecek, yoksa alakasız yeni bir parça mı tasarlayacak
+      const K = typeof D !== 'undefined' && D.kaynak && D.parcalar && D.parcalar.length ? D.kaynak : null;
+      if (K && window.pdSecim) {
+        pdSecim('Tasarıma geç', [['duzenle', `Açık modeli düzenle · ${K.ad}`], ['yeni', 'Yeni boş parça (alakasız)'], ['', 'Vazgeç']]).then(r => {
+          if (r === 'duzenle') $('mDuzenle').click(); else if (r === 'yeni') $('mParca').click();
+          guncelle();
+        });
+        return;
+      }
+      $('mParca').click();
+    }
     guncelle();
   }
 
