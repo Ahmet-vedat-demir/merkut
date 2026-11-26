@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="tr" data-surum="0.2.92 (web)">
+<html lang="tr" data-surum="0.2.93 (web)">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
@@ -501,6 +501,42 @@ body.masaustu #kesitBar{left:calc(var(--sol,84px) + (100vw - var(--sol,84px) - v
 #myIc .myBos{color:var(--metin2,#8FA6BE);padding:20px;text-align:center}
 @media (max-width:760px){#myIc .myS{grid-template-columns:30px repeat(4,1fr) 46px}#myIc .myGer{grid-column:2 / -1}#myIc .myNot{grid-column:2 / -1}#myIc .myNo{grid-row:span 3;align-self:start}}
 @media (max-width:520px){#muayene .myUst>b{display:none}}
+/* ayarlar: simgeli, az yazılı */
+#ayarlar .ayIc h3{display:flex;align-items:center;gap:8px}#ayarlar .ayIc h3 svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
+#ayarlar:not(.aciklamali) .ayIc small{display:none}
+#ayarlar #ayBilgi.acik{color:var(--vurgu2);background:rgba(46,196,198,.16)}
+#ayarlar .ayEt{display:flex;align-items:center;gap:10px;min-width:0;color:var(--metin,#E6F1F5);font-size:13.5px}
+#ayarlar .ayEt>svg{width:22px;height:22px;flex:none;fill:none;stroke:#7FD3D6;stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round}
+#ayarlar .ayEt small{display:block;font-size:11px;color:var(--metin2,#8FA6BE);margin-top:2px}
+#ayarlar .ayEtTek{padding:10px 0 6px}#ayarlar .ayEtTek .ayMini{margin-left:auto}
+#ayarlar .aySeg{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-bottom:1px solid rgba(36,69,107,.4);flex-wrap:wrap}
+#ayarlar .aySecim.ikonlu{border:0;gap:5px;overflow:visible}#ayarlar .aySecim.ikonlu button{height:auto;min-width:58px;padding:6px 6px 5px;border:1px solid var(--kenar)!important;border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:10.5px}
+#ayarlar .aySecim.ikonlu button svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linejoin:round;stroke-linecap:round}
+#ayarlar .ayKarolar{display:grid;grid-template-columns:repeat(auto-fill,minmax(98px,1fr));gap:8px;padding:10px 0}
+#ayarlar .ayKaro,#ayarlar .ayAnah.ayKaro{width:auto;height:auto;min-height:76px;border-radius:12px;border:1px solid var(--kenar);background:var(--panel2);color:var(--metin2,#9FB3C8);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px 6px;cursor:pointer;position:relative;transition:background .15s,border-color .15s}
+#ayarlar .ayAnah.ayKaro::after{display:none}
+#ayarlar .ayKaro svg{width:28px;height:28px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linejoin:round;stroke-linecap:round}
+#ayarlar .ayKaro span{font-size:12px;text-align:center;line-height:1.2}
+#ayarlar .ayKaro small{font-size:10.5px;text-align:center;color:var(--metin2,#8FA6BE)}
+#ayarlar .ayAnah.ayKaro.on{background:rgba(46,196,198,.16);border-color:var(--vurgu);color:var(--vurgu2)}
+#ayarlar .ayKaro .ayNokta{position:absolute;top:7px;right:8px;width:8px;height:8px;border-radius:50%;background:#3A5675}#ayarlar .ayKaro.on .ayNokta{background:#2EC4C6;box-shadow:0 0 6px #2EC4C6}
+#ayarlar .ayGenel .ayKaro{min-height:64px}
+#ayarlar .ayMini{width:32px;height:32px;border-radius:9px;border:1px solid var(--kenar);background:var(--panel2);color:var(--vurgu2);display:flex;align-items:center;justify-content:center;cursor:pointer}#ayarlar .ayMini svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8}
+#ayarlar .ayIsikSur>span{display:flex;align-items:center;gap:8px}#ayarlar .ayIsikSur>span svg{width:20px;height:20px;flex:none;fill:none;stroke:#F2C27A;stroke-width:1.7}#ayarlar .ayIsikSur em{font-style:normal}
+#ayarlar .ayKureDug button{width:40px;padding:0;display:flex;align-items:center;justify-content:center}#ayarlar .ayKureDug button svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2}
+#ayarlar .ayIpucu{font-size:11px;color:var(--metin2,#8FA6BE);margin:4px 0 0}
+#ayarlar .ayFareD{min-width:120px}
+#ayarlar .ayKisa{opacity:.85}
+/* özellik formu: resim + rozet + simgeli onay */
+#pFormIc .pResimK{grid-column:1 / -1;display:flex;justify-content:center;background:rgba(46,196,198,.06);border-radius:10px;margin-bottom:4px}
+.pResim{width:100%;max-width:260px;height:auto}.pResim path,.pResim ellipse,.pResim circle{fill:none;stroke-width:2;stroke-linejoin:round;stroke-linecap:round}
+.pResim .s{stroke:#7FD3D6}.pResim .p{stroke:#7FD3D6;stroke-dasharray:4 3;opacity:.8}.pResim .c{stroke:#4C8DF6}.pResim .k{stroke:#8FA6BE;stroke-dasharray:6 4;stroke-width:1.4}.pResim .o{stroke:#F2A65A;stroke-width:2.2}.pResim .n{fill:#F2A65A;stroke:none}
+.pResim .h{fill:#F2A65A;font:800 15px system-ui,sans-serif}
+#pFormIc .pRozet{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:20px;padding:0 5px;margin-right:6px;border-radius:6px;background:#F2A65A;color:#1A1205;font-size:12px;font-weight:800}
+#pFormIc .pAlan.cip{display:flex;align-items:center;justify-content:center;gap:6px;border:1px solid var(--kenar);border-radius:10px;padding:8px 10px;background:var(--panel2);cursor:pointer;min-height:42px}
+#pFormIc .pAlan.cip input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+#pFormIc .pAlan.cip span{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--metin2,#9FB3C8)}#pFormIc .pAlan.cip svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linejoin:round;stroke-linecap:round}
+#pFormIc .pAlan.cip:has(input:checked){border-color:var(--vurgu);background:rgba(46,196,198,.16)}#pFormIc .pAlan.cip:has(input:checked) span{color:var(--vurgu2)}
 #ayarlar h3{margin:16px 0 4px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--vurgu)}
 #ayarlar .ayS{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid rgba(36,69,107,.55)}
 #ayarlar .ayS>span{display:flex;flex-direction:column;color:var(--metin);font-size:14px}
@@ -759,6 +795,52 @@ body.masaustu #skAlan{cursor:crosshair}
 body.masaustu #karsilama p{display:block}
 body.masaustu #kumpas{max-width:380px}
 
+/* ---- sürüklenebilir / kenara yapışan paneller (masaüstü) */
+body.masaustu{--ustEk:0px;--altEk:0px;--navG:84px;--seritG:96px;--seritY:70px}
+body.masaustu.solKatli{--navG:22px}body.masaustu.sagKatli{--seritG:22px}
+body.masaustu #sahne{top:calc(var(--ust) + var(--ustEk));bottom:var(--altEk)}
+body.masaustu #agac{top:calc(var(--ust) + var(--ustEk));bottom:var(--altEk)}
+body.masaustu #kumpas,body.masaustu #kutleKart{top:calc(var(--ust) + var(--ustEk) + 8px)}
+body.masaustu #secim,body.masaustu #mbdBar{bottom:calc(var(--altEk) + 8px)}
+body.masaustu #kesitBar{bottom:calc(var(--altEk) + 18px)}
+body.masaustu #karsilama{inset:calc(var(--ust) + var(--ustEk)) var(--sag) var(--altEk) var(--sol)}
+/* şerit solda */
+body.masaustu.seritSol{--sag:0px;--sol:calc(var(--navG) + var(--seritG))}
+body.masaustu.seritSol #modulNav{width:var(--navG)}
+body.masaustu.seritSol #aracSerit{left:var(--navG);right:auto;width:var(--seritG);border-left:0;border-right:1px solid #1F3A5C}
+/* şerit üstte / altta: yatay */
+body.masaustu.seritUst,body.masaustu.seritAlt,body.masaustu.seritYuzer{--sag:0px}
+body.masaustu.sagKatli.seritSol,body.masaustu.sagKatli.seritUst,body.masaustu.sagKatli.seritAlt,body.masaustu.sagKatli.seritYuzer{--sag:0px}
+body.masaustu.seritUst{--ustEk:var(--seritY)}body.masaustu.seritAlt{--altEk:var(--seritY)}
+body.masaustu.seritUst #aracSerit,body.masaustu.seritAlt #aracSerit{left:var(--sol);right:0;width:auto;height:var(--seritY);flex-direction:row;align-items:stretch;padding:0 6px;overflow-x:auto;overflow-y:hidden;border-left:0;touch-action:pan-x}
+body.masaustu.seritUst #aracSerit{top:var(--ust);bottom:auto;border-bottom:1px solid #1F3A5C}
+body.masaustu.seritAlt #aracSerit{top:auto;bottom:0;border-top:1px solid #1F3A5C}
+body.masaustu.seritUst #aracSerit .grp,body.masaustu.seritAlt #aracSerit .grp{flex-direction:column;align-items:flex-start;padding:0 6px 0 0;border-bottom:0;border-right:1px solid var(--kenar)}
+body.masaustu.seritUst #aracSerit .grp>.ar,body.masaustu.seritAlt #aracSerit .grp>.ar{flex-direction:row}
+body.masaustu.seritUst #aracSerit .ib,body.masaustu.seritAlt #aracSerit .ib{width:66px;height:50px}
+body.masaustu.seritUst .katla.k-sag,body.masaustu.seritAlt .katla.k-sag,body.masaustu.seritYuzer .katla.k-sag{display:none}
+/* şerit yüzer */
+body.masaustu.seritYuzer #aracSerit{right:auto;bottom:auto;width:96px;height:auto;max-height:78vh;border:1px solid var(--kenar);border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.45);z-index:30}
+/* ağaç sağda / yüzer */
+body.masaustu{--agacW:min(360px,30vw)}body.masaustu #agac{width:var(--agacW)}
+body.masaustu #agac.acik ~ #sahne,body.masaustu #agac.acik ~ #karsilama{left:calc(var(--sol) + var(--agacW))}
+body.masaustu.agacSag #agac.acik ~ #sahne,body.masaustu.agacSag #agac.acik ~ #karsilama{left:var(--sol);right:calc(var(--sag) + var(--agacW))}
+body.masaustu.agacYuzer #agac.acik ~ #sahne,body.masaustu.agacYuzer #agac.acik ~ #karsilama{left:var(--sol)}
+body.masaustu.agacSag #agac{left:auto;right:var(--sag);border-right:0;border-left:1px solid var(--kenar)}
+body.masaustu.agacYuzer #agac{bottom:auto;border:1px solid var(--kenar);border-radius:14px;box-shadow:0 14px 40px rgba(0,0,0,.45);resize:both;overflow:hidden;min-width:220px;min-height:200px;z-index:25}
+/* tutamaklar */
+.tutamak{display:none}
+body.masaustu .tutamak{display:flex;align-items:center;justify-content:center;cursor:grab;color:#5E7896;flex:0 0 auto;touch-action:none}
+body.masaustu .tutamak:hover{color:#2EC4C6}
+body.masaustu .tutamak svg{width:18px;height:18px;fill:currentColor}
+body.masaustu #aracSerit>.tutamak{width:70px;height:14px;margin-bottom:2px}
+body.masaustu.seritUst #aracSerit>.tutamak,body.masaustu.seritAlt #aracSerit>.tutamak{width:14px;height:auto;margin:0 4px 0 0}
+body.masaustu.seritUst #aracSerit>.tutamak svg,body.masaustu.seritAlt #aracSerit>.tutamak svg{transform:rotate(90deg)}
+body.masaustu.sagKatli:not(.seritUst):not(.seritAlt):not(.seritYuzer) #aracSerit>.tutamak{display:none}
+body.masaustu #agac .baslik .tutamak{width:18px;height:18px;margin:0 6px 0 -8px}
+body.masaustu #agac .baslik{cursor:grab}
+.panelSuruklen{transition:none!important;opacity:.92;cursor:grabbing!important}
+#yaslaGolge{position:fixed;z-index:70;background:rgba(46,196,198,.18);border:2px solid #2EC4C6;border-radius:10px;pointer-events:none;display:none;transition:all .12s}
 </style>
 </head>
 <body>
@@ -971,43 +1053,48 @@ body.masaustu #kumpas{max-width:380px}
 <div id="bildirim"></div>
 <div id="yukleme"><div class="kart"><div class="donen"></div><div id="yuklemeMetin">Hazırlanıyor…</div><div id="yuklemeCubuk"><i></i></div><div id="yuklemeAyrinti"></div><button id="yuklemeIptal">İptal</button></div></div>
 <div id="ayarlar" role="dialog" aria-label="Ayarlar"><div class="ayKart">
-  <div class="ayUst"><h2>Ayarlar</h2><button class="ib" id="ayKapat" aria-label="Kapat"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
+  <div class="ayUst"><h2>Ayarlar</h2><button class="ib" id="ayBilgi" title="Açıklamaları göster / gizle" style="margin-left:auto"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg></button><button class="ib" id="ayKapat" aria-label="Kapat"><svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>
   <div class="ayIc">
-    <h3>Görünüm</h3>
-    <div class="ayS"><span>3B arka plan<small>İnceleme, CAM ve Tasarım 3B görünümü</small></span></div>
+    <h3><svg viewBox="0 0 24 24"><path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v8"/></svg>Görünüm</h3>
+    <div class="ayEt ayEtTek"><svg viewBox="0 0 24 24"><path d="M3 5h18v14H3z"/><path d="M3 15l5-4 4 3 3-2 6 5"/></svg><span>Arka plan<small>İnceleme, CAM ve Tasarım 3B görünümü</small></span></div>
     <div class="ayArka" id="ayArka"></div>
-    <div class="ayS"><span>Görünüm türü<small>Perspektif: uzaktaki küçük görünür · Paralel: ölçek her derinlikte aynı</small></span><div class="aySecim" id="ayIzdusum"><button data-v="perspektif">Perspektif</button><button data-v="paralel">Paralel</button></div></div>
+    <div class="aySeg"><span class="ayEt"><svg viewBox="0 0 24 24"><path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v8"/></svg><span>Görünüm türü<small>Perspektif: uzaktaki küçük görünür · Paralel: ölçek her derinlikte aynı</small></span></span><div class="aySecim ikonlu" id="ayIzdusum"><button data-v="perspektif" title="Perspektif"><svg viewBox="0 0 24 24"><path d="M3 19L8 5h8l5 14z"/><path d="M8 5l-1 14M16 5l1 14"/></svg><span>Perspektif</span></button><button data-v="paralel" title="Paralel"><svg viewBox="0 0 24 24"><path d="M5 5h14v14H5z"/><path d="M9.7 5v14M14.3 5v14"/></svg><span>Paralel</span></button></div></div>
+    <div class="aySeg"><span class="ayEt"><svg viewBox="0 0 24 24"><path d="M4 20v-8a8 8 0 0 1 8-8h8"/></svg><span>Teğet kenarlar<small>Radyus gibi yumuşak geçişlerin sınır çizgileri</small></span></span><div class="aySecim ikonlu" id="ayTeget"><button data-v="goster" title="Göster"><svg viewBox="0 0 24 24"><path d="M4 20v-8a8 8 0 0 1 8-8h8"/><path d="M2 12h5M12 2v5"/></svg><span>Göster</span></button><button data-v="soluk" title="Soluk"><svg viewBox="0 0 24 24"><path d="M4 20v-8a8 8 0 0 1 8-8h8"/><path d="M2 12h5M12 2v5" stroke-dasharray="1.5 2" opacity=".55"/></svg><span>Soluk</span></button><button data-v="gizle" title="Gizle"><svg viewBox="0 0 24 24"><path d="M4 20v-8a8 8 0 0 1 8-8h8"/></svg><span>Gizle</span></button></div></div>
+    <div class="aySeg"><span class="ayEt"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg><span>Yüzey kalitesi<small>Hassas: daha pürüzsüz ama daha yavaş açılır (sonraki açılan dosyada geçerli)</small></span></span><div class="aySecim ikonlu" id="ayKalite"><button data-v="hizli" title="Hızlı"><svg viewBox="0 0 24 24"><path d="M12 4l7 4v8l-7 4-7-4V8z"/></svg><span>Hızlı</span></button><button data-v="normal" title="Normal"><svg viewBox="0 0 24 24"><path d="M12 4l5 1.5 3 4.5v4l-3 4.5-5 1.5-5-1.5-3-4.5v-4l3-4.5z"/></svg><span>Normal</span></button><button data-v="hassas" title="Hassas"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><path d="M12 4v16M4 12h16"/><path d="M6.3 6.3l11.4 11.4M17.7 6.3L6.3 17.7" opacity=".5"/></svg><span>Hassas</span></button></div></div>
+    <div class="ayKarolar"><button class="ayAnah ayKaro" data-ayar="kenar" title="Parçanın kenarlarını çizer (çok büyük modellerde kendiliğinden kapanır)"><svg viewBox="0 0 24 24"><path d="M4 8l8-4 8 4v8l-8 4-8-4z"/><path d="M4 8l8 4 8-4M12 12v8"/></svg><span>Kenar çizgileri</span><small>Parçanın kenarlarını çizer (çok büyük modellerde kendiliğinden kapanır)</small><i class="ayNokta"></i></button></div>
     <div class="ayIsik" id="ayIsik">
-      <div class="ayS" style="border-bottom:0;padding-bottom:4px"><span>Işık<small>Hazır ayar seç ya da küredeki ışıkları sürükle. Işıklar ekrana bağlı: model dönerken seninle gelir.</small></span><button class="ayDeger" id="ayIsikSifir" title="Merküt varsayılan ışığına dön">Varsayılan</button></div>
+      <div class="ayEt ayEtTek"><svg viewBox="0 0 24 24"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9V16h7v-2.1A6 6 0 0 0 12 3z"/></svg><span>Işık<small>Hazır ayar seç ya da küredeki ışıkları sürükle. Işıklar ekrana bağlı: model dönerken seninle gelir.</small></span><button class="ayMini" id="ayIsikSifir" title="Varsayılan ışığa dön"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg></button></div>
       <div class="ayIsikHazir" id="ayIsikHazir"></div>
-      <div class="ayIsikSur" data-k="parlak"><span>Parlaklık</span><input type="range" min="0.3" max="2" step="0.05"><b></b></div>
-      <div class="ayIsikSur" data-k="ortam"><span>Ortam ışığı<small>Gölgede kalan yerlerin aydınlığı</small></span><input type="range" min="0" max="3.5" step="0.05"><b></b></div>
-      <div class="ayIsikSur" data-k="parlama"><span>Parlama<small>Yüzeydeki parlak yansıma</small></span><input type="range" min="0" max="1" step="0.01"><b></b></div>
-      <div class="ayIsikKure" id="ayIsikKure"><canvas id="ayKure" aria-label="Işık küresi: tutamakları sürükleyerek ışık yönünü değiştir"></canvas>
-        <div class="ayKureYan"><p><b>Tutamağı sürükle</b>, ışık o yönden gelsin. Küreye dokunmak seçili ışığı oraya taşır. Tutarken model görünür.</p>
-          <div class="ayIsikSur" id="ayIsikSecS"><span>Işık 1 şiddeti</span><input type="range" min="0" max="3" step="0.05"><b></b></div>
-          <div class="ayKureDug"><button id="ayIsikEkle">+ Işık ekle</button><button id="ayIsikSil">Seçiliyi sil</button></div>
-          <p style="opacity:.75">Yüzey hatası aramak için: <b>Yüzey kontrol</b> hazır ayarı, ya da ışığı kürenin kenarına (yüzeyi yalayacak şekilde) çek ve parlamayı artır.</p>
+      <div class="ayIsikSur" data-k="parlak" title="Parlaklık"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg><em>Parlaklık</em></span><input type="range" min="0.3" max="2" step="0.05"><b></b></div>
+      <div class="ayIsikSur" data-k="ortam" title="Ortam ışığı: gölgede kalan yerlerin aydınlığı"><span><svg viewBox="0 0 24 24"><path d="M7 18h10a4 4 0 0 0 .5-8A6 6 0 0 0 6 11.5 3.5 3.5 0 0 0 7 18z"/></svg><em>Ortam</em></span><input type="range" min="0" max="3.5" step="0.05"><b></b></div>
+      <div class="ayIsikSur" data-k="parlama" title="Parlama: yüzeydeki parlak yansıma"><span><svg viewBox="0 0 24 24"><path d="M12 3l2 6 6 2-6 2-2 6-2-6-6-2 6-2z"/></svg><em>Parlama</em></span><input type="range" min="0" max="1" step="0.01"><b></b></div>
+      <div class="ayIsikKure" id="ayIsikKure"><canvas id="ayKure" title="Tutamağı sürükle: ışık o yönden gelsin" aria-label="Işık küresi"></canvas>
+        <div class="ayKureYan">
+          <div class="ayIsikSur" id="ayIsikSecS"><span><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M5 5l1.5 1.5M17.5 17.5L19 19M5 19l1.5-1.5M17.5 6.5L19 5"/></svg><em>Işık 1</em></span><input type="range" min="0" max="3" step="0.05"><b></b></div>
+          <div class="ayKureDug"><button id="ayIsikEkle" title="Işık ekle"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></button><button id="ayIsikSil" title="Seçili ışığı sil"><svg viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13"/></svg></button></div>
+          <p class="ayIpucu">Tutamağı sürükle → ışık o yönden gelir. Yüzey hatası için <b>Yüzey kontrol</b>.</p>
         </div></div>
     </div>
-    <label class="ayS"><span>Kenar çizgileri<small>Parçanın kenarlarını çizer (çok büyük modellerde kendiliğinden kapanır)</small></span><button class="ayAnah" data-ayar="kenar"></button></label>
-    <div class="ayS"><span>STEP kalitesi<small>Yüksek: daha pürüzsüz ama daha yavaş açılır</small></span><button class="ayDeger" id="ayKalite"></button></div>
-    <h3>Arayüz ve fare</h3>
-    <div class="ayS"><span>Arayüz<small>Otomatik: fareli geniş ekranda masaüstü düzeni</small></span><button class="ayDeger" id="ayArayuz"></button></div>
-    <div class="ayS"><span>Fare düzeni (3B)<small id="ayFareA"></small></span><button class="ayDeger" id="ayFare"></button></div>
-    <label class="ayS"><span>Tekerleği ters çevir<small>İleri: uzaklaş / geri: yaklaş</small></span><button class="ayAnah" data-ayar="tekerTers"></button></label>
-    <div class="ayS"><span>Klavye kısayolları<small>Esc iptal · Del sil · Ctrl+Z / Ctrl+Y geri-ileri · F sığdır · Ctrl+S kaydet · Ctrl+O aç</small></span></div>
-    <h3>Taslak (Sketch)</h3>
-    <label class="ayS"><span>Arka plan ızgarası<small>Gerçek ölçülü kareler (1–10–100 mm)</small></span><button class="ayAnah" data-ayar="izgara"></button></label>
-    <label class="ayS"><span>Izgaraya yapış<small>Çizerken noktalar görünen karelere oturur</small></span><button class="ayAnah" data-ayar="yapis"></button></label>
-    <label class="ayS"><span>Yön ve ölçek göstergesi<small>Sol alttaki eksen okları ve kare ölçüsü</small></span><button class="ayAnah" data-ayar="yon"></button></label>
-    <label class="ayS"><span>Spline birleşimlerinde teğetlik<small>Spline'ı çizgi/yay/spline'a kırıksız bağlar (35°'den dar köşeler)</small></span><button class="ayAnah" data-ayar="g1"></button></label>
-    <h3>Tasarım</h3>
-    <label class="ayS"><span>Otomatik kurtarma<small>Kaydedilmemiş parçayı birkaç saniyede bir cihaza yazar</small></span><button class="ayAnah" data-ayar="otoKayit"></button></label>
-    <h3>Genel</h3>
-    <div class="ayS"><span>Tanıtım turu<small>Arayüzü ve modülleri adım adım gösterir</small></span><button class="ayDeger" id="ayTur">Göster</button></div>
-    <div class="ayS"><span>Ayarları sıfırla<small>Tüm görünüm ve taslak ayarları ilk haline döner</small></span><button class="ayDeger" id="aySifirla">Sıfırla</button></div>
-    <div class="ayS"><span>Lisanslar<small>Kullanılan açık kaynak bileşenler</small></span><button class="ayDeger" id="ayLisans">Aç</button></div>
+    <h3><svg viewBox="0 0 24 24"><path d="M3 5h12v10H3zM17 8h4v11h-4zM7 19h4"/></svg>Arayüz ve fare</h3>
+    <div class="aySeg"><span class="ayEt"><svg viewBox="0 0 24 24"><path d="M3 5h12v10H3zM17 8h4v11h-4zM7 19h4"/></svg><span>Arayüz<small>Otomatik: fareli geniş ekranda masaüstü düzeni</small></span></span><div class="aySecim ikonlu" id="ayArayuz"><button data-v="oto" title="Otomatik"><svg viewBox="0 0 24 24"><path d="M12 3l2.2 5.5L20 9l-4.5 3.8L17 19l-5-3-5 3 1.5-6.2L4 9l5.8-.5z"/></svg><span>Otomatik</span></button><button data-v="telefon" title="Telefon"><svg viewBox="0 0 24 24"><path d="M8 3h8v18H8z"/><path d="M11 18h2"/></svg><span>Telefon</span></button><button data-v="masaustu" title="Masaüstü"><svg viewBox="0 0 24 24"><path d="M3 4h18v12H3z"/><path d="M9 20h6M12 16v4"/></svg><span>Masaüstü</span></button></div></div>
+    <div class="aySeg"><span class="ayEt"><svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 1 6 6v6a6 6 0 0 1-12 0V9a6 6 0 0 1 6-6z"/><path d="M12 3v6M6 9h12"/></svg><span>Fare düzeni<small id="ayFareA"></small></span></span><button class="ayDeger ayFareD" id="ayFare"></button></div>
+    <div class="ayKarolar"><button class="ayAnah ayKaro" data-ayar="tekerTers" title="İleri: uzaklaş / geri: yaklaş"><svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 1 6 6v6a6 6 0 0 1-12 0V9a6 6 0 0 1 6-6z"/><path d="M12 6v4"/><path d="M20 6l2 2-2 2M4 14l-2 2 2 2"/></svg><span>Tekerlek ters</span><small>İleri: uzaklaş / geri: yaklaş</small><i class="ayNokta"></i></button></div>
+    <div class="ayEt ayEtTek ayKisa"><svg viewBox="0 0 24 24"><path d="M3 7h18v10H3z"/><path d="M6 10h1M9 10h1M12 10h1M15 10h1M18 10h0M7 14h10"/></svg><span>Kısayollar<small>Esc iptal · Del sil · Ctrl+Z / Ctrl+Y geri-ileri · F sığdır · Ctrl+S kaydet · Ctrl+O aç</small></span></div>
+    <h3><svg viewBox="0 0 24 24"><path d="M4 20l4-1 11-11-3-3L5 16z"/><path d="M14 7l3 3"/></svg>Taslak</h3>
+    <div class="ayKarolar">
+      <button class="ayAnah ayKaro" data-ayar="izgara" title="Gerçek ölçülü kareler (1–10–100 mm)"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 9.3h16M4 14.6h16M9.3 4v16M14.6 4v16"/></svg><span>Izgara</span><small>Gerçek ölçülü kareler (1–10–100 mm)</small><i class="ayNokta"></i></button>
+      <button class="ayAnah ayKaro" data-ayar="yapis" title="Çizerken noktalar görünen karelere oturur"><svg viewBox="0 0 24 24"><path d="M6 4v8a6 6 0 0 0 12 0V4h-4v8a2 2 0 0 1-4 0V4z"/><path d="M6 8h4M14 8h4"/></svg><span>Izgaraya yapış</span><small>Çizerken noktalar görünen karelere oturur</small><i class="ayNokta"></i></button>
+      <button class="ayAnah ayKaro" data-ayar="yon" title="Sol alttaki eksen okları ve kare ölçüsü"><svg viewBox="0 0 24 24"><path d="M5 19V5M5 19h14"/><path d="M2.5 7.5L5 5l2.5 2.5M16.5 16.5L19 19l-2.5 2.5"/></svg><span>Yön göstergesi</span><small>Sol alttaki eksen okları ve kare ölçüsü</small><i class="ayNokta"></i></button>
+      <button class="ayAnah ayKaro" data-ayar="g1" title="Spline'ı çizgi/yay/spline'a kırıksız bağlar (35°'den dar köşeler)"><svg viewBox="0 0 24 24"><path d="M3 17c4 0 4-10 9-10s5 10 9 10"/><circle cx="12" cy="7" r="1.6"/></svg><span>Spline teğetliği</span><small>Spline'ı çizgi/yay/spline'a kırıksız bağlar (35°'den dar köşeler)</small><i class="ayNokta"></i></button>
+    </div>
+    <h3><svg viewBox="0 0 24 24"><path d="M4 8l8-4 8 4v8l-8 4-8-4z"/></svg>Tasarım</h3>
+    <div class="ayKarolar"><button class="ayAnah ayKaro" data-ayar="otoKayit" title="Kaydedilmemiş parçayı birkaç saniyede bir cihaza yazar"><svg viewBox="0 0 24 24"><path d="M12 7v5l3 2"/><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v4h-4"/></svg><span>Oto. kurtarma</span><small>Kaydedilmemiş parçayı birkaç saniyede bir cihaza yazar</small><i class="ayNokta"></i></button></div>
+    <h3><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2"/></svg>Genel</h3>
+    <div class="ayKarolar ayGenel">
+      <button class="ayKaro" id="ayTur" title="Arayüzü ve modülleri adım adım gösterir"><svg viewBox="0 0 24 24"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z"/><path d="M10 8l6 4-6 4z"/></svg><span>Tanıtım turu</span></button>
+      <button class="ayKaro" id="aySifirla" title="Tüm görünüm ve taslak ayarları ilk haline döner"><svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v4h4"/></svg><span>Sıfırla</span></button>
+      <button class="ayKaro" id="ayLisans" title="Kullanılan açık kaynak bileşenler"><svg viewBox="0 0 24 24"><path d="M6 3h9l3 3v15H6z"/><path d="M9 9h6M9 13h6M9 17h4"/></svg><span>Lisanslar</span></button>
+    </div>
     <div class="ayImza">
       <svg width="56" height="56" viewBox="0 0 108 108" aria-hidden="true"> <defs> <radialGradient id="mzemin" cx="50%" cy="40%" r="72%"><stop offset="0" stop-color="#1A3A66"/><stop offset="1" stop-color="#0A1628"/></radialGradient> <linearGradient id="mkanat" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FF5C74"/><stop offset="0.55" stop-color="#C8102E"/><stop offset="1" stop-color="#8E0B20"/></linearGradient> <linearGradient id="mkuyruk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9AF0F0"/><stop offset="1" stop-color="#1A9396"/></linearGradient> </defs> <rect width="108" height="108" rx="24" fill="url(#mzemin)"/> <g transform="translate(54 54) scale(0.86) translate(-54 -55)"> <circle cx="54" cy="47" r="27" fill="none" stroke="#2EC4C6" stroke-width="1.6" opacity="0.45"/> <path d="M57 50 C66 42 74 31 79 16 C80 27 78 35 74 42 C81 37 86 31 91 24 C89 37 82 46 73 52 C80 51 86 52 92 55 C83 63 70 67 57 66 Z" fill="url(#mkanat)"/> <path d="M51 50 C42 42 34 31 29 16 C28 27 30 35 34 42 C27 37 22 31 17 24 C19 37 26 46 35 52 C28 51 22 52 16 55 C25 63 38 67 51 66 Z" fill="url(#mkanat)"/> <path d="M60 57 C68 52 74 46 78 38 M60 62 C69 60 77 56 83 50 M48 57 C40 52 34 46 30 38 M48 62 C39 60 31 56 25 50" stroke="#FFFFFF" stroke-width="1.4" fill="none" stroke-linecap="round" opacity="0.35"/> <path d="M49 70 C47 79 42 85 36 90 C43 89 48 86 51 82 C51 87 51 91 54 97 C57 91 57 87 57 82 C60 86 65 89 72 90 C66 85 61 79 59 70 Z" fill="url(#mkuyruk)"/> <ellipse cx="54" cy="59" rx="8.5" ry="14" fill="#FFFFFF"/> <path d="M54 49 C50.5 54 50.5 65 54 72 C57.5 65 57.5 54 54 49 Z" fill="#DCE8F4"/> <path d="M49 37 C43 31 44 23 50 18 C49 24 50 29 54 32 C53 27 55 23 59 20 C58 26 58 31 56 35 Z" fill="#2EC4C6"/> <circle cx="54" cy="40" r="7.5" fill="#FFFFFF"/> <path d="M61 37.5 L69.5 40.5 L61 43.5 Z" fill="#F2B233"/> <circle cx="56.5" cy="39" r="1.9" fill="#0A1628"/> </g> </svg>
       <b>Merküt</b>
@@ -4026,7 +4113,8 @@ const D = {
   tur: null, ad: '', parcalar: [], agacKok: null, secili: new Set(), kenar: true,
   kalite: 'normal', birim: 'mm', dxf: null, dxfGeo: null, grupRenk: new Map(), sonOlcum: ''
 };
-const KALITE = { hizli: [0.004, 0.6, 'Hızlı'], normal: [0.0015, 0.45, 'Normal'], hassas: [0.0005, 0.25, 'Hassas'] };
+try { const k = localStorage.getItem('hnlKalite'); if (k && ['hizli', 'normal', 'hassas'].includes(k)) D.kalite = k; } catch (e) {}
+const KALITE = { hizli: [0.004, 0.6, 'Hızlı'], normal: [0.001, 0.3, 'Normal'], hassas: [0.0003, 0.12, 'Hassas'] };   // [doğrusal sapma (kutu oranı), açısal sapma (rad)]
 
 // ===================================================================== SAHNE
 const sahneEl = $('sahne');
@@ -4344,29 +4432,58 @@ function parcaOlustur(ad, nesneler, dugum) {
 
 // Kenar çizgileri: parça parça, arayüzü dondurmadan arka planda hesaplanır
 let kenarIs = 0, kenarUrl = null;
-// three.js EdgesGeometry ile aynı kural: komşu üçgenler arası açı eşiği aşan ve sınır kenarlar
-function kenarCikar(pos, idx, esik) {
-  const cosE = Math.cos(esik * Math.PI / 180), K = 1e4; const anah = i => Math.round(pos[3 * i] * K) + ',' + Math.round(pos[3 * i + 1] * K) + ',' + Math.round(pos[3 * i + 2] * K);
+// Kenarlar. Yüz (B-rep face) bilgisi varsa: yalnız iki FARKLI yüzün sınırı kenardır (yüzün içindeki üçgen kırıkları çizilmez →
+// eğri yüzlerde sahte çizgi yok). Sınır iki yüzde aynı normale sahipse (teğet geçiş, ör. R20 radyus kenarı) "teğet kenar" olur;
+// ayarla gösterilir / soluk / gizli. Yüz bilgisi yoksa eski kural: komşu üçgenler arası açı eşiği aşan ve sınır kenarlar.
+// Dönüş: Float32Array (önce keskin, sonra teğet segmentler); dizinin .keskin özelliği keskin kısmın uzunluğu.
+function kenarCikar(pos, idx, esik, yuz, nor) {
+  const cosE = Math.cos(esik * Math.PI / 180), cosT = Math.cos(10 * Math.PI / 180), K = 1e4; const anah = i => Math.round(pos[3 * i] * K) + ',' + Math.round(pos[3 * i + 1] * K) + ',' + Math.round(pos[3 * i + 2] * K);
   const ad = new Array(pos.length / 3); for (let i = 0; i < ad.length; i++) ad[i] = anah(i);
-  const harita = new Map(), out = []; const n = idx.length / 3;
+  const n = idx.length / 3; let fid = null;
+  if (yuz && yuz.length >= 2) { fid = new Int32Array(n).fill(-1); for (let f = 0; f * 2 + 1 < yuz.length; f++) for (let t = yuz[2 * f]; t <= yuz[2 * f + 1] && t < n; t++) fid[t] = f; }
+  const harita = new Map(), out = [], teg = [];
+  const seg = (dizi, a, b) => dizi.push(pos[3 * a], pos[3 * a + 1], pos[3 * a + 2], pos[3 * b], pos[3 * b + 1], pos[3 * b + 2]);
+  const nd = (a, b) => nor[3 * a] * nor[3 * b] + nor[3 * a + 1] * nor[3 * b + 1] + nor[3 * a + 2] * nor[3 * b + 2];
   for (let t = 0; t < n; t++) {
     const a = idx[3 * t], b = idx[3 * t + 1], c = idx[3 * t + 2];
     const ux = pos[3 * b] - pos[3 * a], uy = pos[3 * b + 1] - pos[3 * a + 1], uz = pos[3 * b + 2] - pos[3 * a + 2], vx = pos[3 * c] - pos[3 * a], vy = pos[3 * c + 1] - pos[3 * a + 1], vz = pos[3 * c + 2] - pos[3 * a + 2];
     let nx = uy * vz - uz * vy, ny = uz * vx - ux * vz, nz = ux * vy - uy * vx; const L = Math.hypot(nx, ny, nz); if (!L) continue; nx /= L; ny /= L; nz /= L;
     const v = [a, b, c]; if (ad[a] === ad[b] || ad[b] === ad[c] || ad[c] === ad[a]) continue;
+    const f = fid ? fid[t] : -1;
     for (let j = 0; j < 3; j++) {
       const p = v[j], q = v[(j + 1) % 3]; const k1 = ad[p], k2 = ad[q]; const key = k1 < k2 ? k1 + '|' + k2 : k2 + '|' + k1;
       const e = harita.get(key);
-      if (e) { if (nx * e[2] + ny * e[3] + nz * e[4] <= cosE) out.push(pos[3 * e[0]], pos[3 * e[0] + 1], pos[3 * e[0] + 2], pos[3 * e[1]], pos[3 * e[1] + 1], pos[3 * e[1] + 2]); harita.delete(key); }
-      else harita.set(key, [p, q, nx, ny, nz]);
+      if (e) {
+        harita.delete(key);
+        if (!fid) { if (nx * e[2] + ny * e[3] + nz * e[4] <= cosE) seg(out, e[0], e[1]); continue; }
+        if (e[5] === f) continue;   // aynı yüzün içi: kenar değil
+        let tegetMi;
+        if (nor) { const ayni = ad[e[0]] === ad[p]; const p2 = ayni ? p : q, q2 = ayni ? q : p; tegetMi = nd(e[0], p2) > cosT && nd(e[1], q2) > cosT; }
+        else tegetMi = nx * e[2] + ny * e[3] + nz * e[4] > cosE;
+        seg(tegetMi ? teg : out, e[0], e[1]);
+      }
+      else harita.set(key, [p, q, nx, ny, nz, f]);
     }
   }
-  for (const e of harita.values()) out.push(pos[3 * e[0]], pos[3 * e[0] + 1], pos[3 * e[0] + 2], pos[3 * e[1]], pos[3 * e[1] + 1], pos[3 * e[1] + 2]);
-  return new Float32Array(out);
+  for (const e of harita.values()) seg(out, e[0], e[1]);
+  const r = new Float32Array(out.length + teg.length); r.set(out); r.set(teg, out.length);
+  return { k: r, keskin: out.length };
+}
+const kenarTegetMalzeme = new THREE.LineBasicMaterial({ color: 0x0b0e12, transparent: true, opacity: .55 });
+setTimeout(() => { try { tegetKenarUygula(); } catch (e) {} }, 0);
+function kenarGeoYap(k, keskin) {
+  const eg = new THREE.BufferGeometry(); eg.setAttribute('position', new THREE.BufferAttribute(k, 3));
+  eg.addGroup(0, keskin / 3, 0); if (k.length > keskin) eg.addGroup(keskin / 3, (k.length - keskin) / 3, 1);
+  return eg;
+}
+function tegetKenarUygula() {   // 'goster' | 'soluk' | 'gizle'
+  const t = (window.hnlAyar || {}).teget || 'goster';
+  kenarTegetMalzeme.visible = t !== 'gizle'; kenarTegetMalzeme.opacity = t === 'soluk' ? 0.18 : kenarMalzeme.opacity; kenarTegetMalzeme.color.copy(kenarMalzeme.color);
+  kenarTegetMalzeme.needsUpdate = true; ciz();
 }
 function kenarHavuzu() {
   if (!kenarUrl) kenarUrl = URL.createObjectURL(new Blob([kenarCikar.toString() + `
-self.onmessage = ev => { const { no, pos, idx } = ev.data; const k = kenarCikar(pos, idx, 28); self.postMessage({ no, k }, [k.buffer]); };`], { type: 'text/javascript' }));
+self.onmessage = ev => { const { no, pos, idx, yuz, nor } = ev.data; const r = kenarCikar(pos, idx, 28, yuz, nor); self.postMessage({ no, k: r.k, keskin: r.keskin }, [r.k.buffer]); };`], { type: 'text/javascript' }));
   const n = Math.max(1, Math.min(6, (navigator.hardwareConcurrency || 2) - 1));
   return Array.from({ length: n }, () => new Worker(kenarUrl));
 }
@@ -4376,17 +4493,18 @@ function kenarlariHazirla() {
   if (toplam < 60000 * 3 || typeof Worker === 'undefined') return kenarlariHazirlaTek();
   const is = ++kenarIs; const liste = model.children.filter(o => o.isMesh && !o.userData.kenar);
   const havuz = kenarHavuzu(); let sira = 0, bitti = 0; const bekleyen = new Map(); let cizZaman = 0;
-  const ekle = (o, eg) => { const e = new THREE.LineSegments(eg, kenarMalzeme); e.userData.paylasimli = true; e.matrixAutoUpdate = false; e.matrix.copy(o.matrix); e.matrixWorldNeedsUpdate = true; e.visible = o.visible; e.raycast = () => {}; o.userData.kenar = e; kenarGrup.add(e); };
+  const ekle = (o, eg) => { const e = new THREE.LineSegments(eg, [kenarMalzeme, kenarTegetMalzeme]); e.userData.paylasimli = true; e.matrixAutoUpdate = false; e.matrix.copy(o.matrix); e.matrixWorldNeedsUpdate = true; e.visible = o.visible; e.raycast = () => {}; o.userData.kenar = e; kenarGrup.add(e); };
   const gonder = w => {
     while (sira < liste.length) { const o = liste[sira]; const no = sira++; if (o.userData.kenar) { bitti++; continue; }
       if (o.geometry.userData.kenarGeo) { ekle(o, o.geometry.userData.kenarGeo); bitti++; continue; }
-      bekleyen.set(no, o); const pos = o.geometry.attributes.position.array.slice(), idx = o.geometry.index.array.slice(); w.postMessage({ no, pos, idx }, [pos.buffer, idx.buffer]); return; }
+      bekleyen.set(no, o); const pos = o.geometry.attributes.position.array.slice(), idx = o.geometry.index.array.slice(); const yuz = o.userData.yuz ? Int32Array.from(o.userData.yuz) : null; const na = o.geometry.attributes.normal; const nor = na && o.userData.yuz ? na.array.slice() : null;
+      w.postMessage({ no, pos, idx, yuz, nor }, [pos.buffer, idx.buffer].concat(yuz ? [yuz.buffer] : [], nor ? [nor.buffer] : [])); return; }
     w.terminate();
   };
   havuz.forEach(w => { w.onmessage = ev => {
       if (is !== kenarIs || !D.kenar) { havuz.forEach(x => x.terminate()); return; }
       const o = bekleyen.get(ev.data.no); bekleyen.delete(ev.data.no); bitti++;
-      const eg = new THREE.BufferGeometry(); eg.setAttribute('position', new THREE.BufferAttribute(ev.data.k, 3)); o.geometry.userData.kenarGeo = eg; ekle(o, eg);
+      const eg = kenarGeoYap(ev.data.k, ev.data.keskin); o.geometry.userData.kenarGeo = eg; ekle(o, eg);
       const t = performance.now(); if (t - cizZaman > 120 || bitti >= liste.length) { cizZaman = t; ciz(); }
       gonder(w);
     }; w.onerror = () => { w.terminate(); }; gonder(w); });
@@ -4400,8 +4518,8 @@ function kenarlariHazirlaTek() {
     const t0 = performance.now();
     while (i < liste.length && performance.now() - t0 < 12) {
       const o = liste[i++];
-      let eg = o.geometry.userData.kenarGeo; if (!eg) { eg = new THREE.EdgesGeometry(o.geometry, 28); o.geometry.userData.kenarGeo = eg; }
-      const e = new THREE.LineSegments(eg, kenarMalzeme); e.userData.paylasimli = true;
+      let eg = o.geometry.userData.kenarGeo; if (!eg) { const na = o.geometry.attributes.normal; const r = kenarCikar(o.geometry.attributes.position.array, o.geometry.index ? o.geometry.index.array : Uint32Array.from({ length: o.geometry.attributes.position.count }, (_, i) => i), 28, o.userData.yuz, na && o.userData.yuz ? na.array : null); eg = kenarGeoYap(r.k, r.keskin); o.geometry.userData.kenarGeo = eg; }
+      const e = new THREE.LineSegments(eg, [kenarMalzeme, kenarTegetMalzeme]); e.userData.paylasimli = true;
       e.matrixAutoUpdate = false; e.matrix.copy(o.matrix); e.matrixWorldNeedsUpdate = true; e.visible = o.visible; e.raycast = () => {};
       o.userData.kenar = e; kenarGrup.add(e);
     }
@@ -4850,7 +4968,7 @@ window.arkaPlanSiradaki = () => { let cur = 'lacivert'; try { cur = localStorage
 try { let a = localStorage.getItem('hnlArka') || 'lacivert'; if (a === 'catia') { a = 'gok'; localStorage.setItem('hnlArka', a); } arkaPlanUygula(a); } catch (e) { arkaPlanUygula('lacivert'); }
 $('mArka').onclick = () => { const ad = window.arkaPlanSiradaki(); bildir('Arka plan: ' + ad, 1400); };
 // ---- Ayarlar (görünüm, taslak, tasarım); window.hnlAyar diğer modüllerden okunur
-const AYAR_VARSAYILAN = { izdusum: 'perspektif', izgara: true, yapis: true, yon: true, g1: true, otoKayit: true, arayuz: 'oto', fare: 'merkut', tekerTers: false };
+const AYAR_VARSAYILAN = { izdusum: 'perspektif', teget: 'goster', izgara: true, yapis: true, yon: true, g1: true, otoKayit: true, arayuz: 'oto', fare: 'merkut', tekerTers: false };
 window.hnlAyar = Object.assign({}, AYAR_VARSAYILAN);
 try { Object.assign(window.hnlAyar, JSON.parse(localStorage.getItem('hnlAyar') || '{}')); } catch (e) {}
 { const ESKI = { catia: 'ortaKaydir', solidworks: 'ortaDondur', nx: 'ortaDondurSag', onshape: 'sagDondur' }; if (ESKI[window.hnlAyar.fare]) window.hnlAyar.fare = ESKI[window.hnlAyar.fare]; }   // eski profil adları
@@ -4867,10 +4985,11 @@ arayuzUygula();
 function ayarlarYaz() {
   const A = window.hnlAyar;
   document.querySelectorAll('#ayarlar .ayAnah').forEach(b => { const k = b.dataset.ayar; b.classList.toggle('on', k === 'kenar' ? !!D.kenar : !!A[k]); });
-  $('ayKalite').textContent = $('mKaliteD').textContent;
+  document.querySelectorAll('#ayKalite button').forEach(b => b.classList.toggle('on', b.dataset.v === D.kalite));
+  document.querySelectorAll('#ayTeget button').forEach(b => b.classList.toggle('on', b.dataset.v === (A.teget || 'goster')));
   isikYaz();
   document.querySelectorAll('#ayIzdusum button').forEach(b => b.classList.toggle('on', b.dataset.v === (A.izdusum || 'perspektif')));
-  $('ayArayuz').textContent = { oto: 'Otomatik', telefon: 'Telefon', masaustu: 'Masaüstü' }[A.arayuz || 'oto'];
+  document.querySelectorAll('#ayArayuz button').forEach(b => b.classList.toggle('on', b.dataset.v === (A.arayuz || 'oto')));
   const FP = FARE_ACIKLAMA[A.fare || 'merkut']; $('ayFare').textContent = FP[0]; $('ayFareA').textContent = FP[1];
   let cur = 'lacivert'; try { cur = localStorage.getItem('hnlArka') || 'lacivert'; } catch (e) {}
   const kutu = $('ayArka'); kutu.innerHTML = '';
@@ -4980,7 +5099,9 @@ $('ayIsik').addEventListener('pointerdown', e => { if (e.target.type !== 'range'
 const isikBirak = () => { if (!$('ayarlar').classList.contains('onizle')) return; $('ayarlar').classList.remove('onizle'); document.querySelectorAll('#ayIsik .aktifSatir').forEach(d => d.classList.remove('aktifSatir')); isikYaz(); };
 window.addEventListener('pointerup', isikBirak); window.addEventListener('pointercancel', isikBirak);
 $('ayIsikSifir').onclick = e => { e.preventDefault(); isikKaydet(Object.assign({}, ISIK_VARSAYILAN, { yon: ISIK_VARSAYILAN.yon.map(o => ({ d: o.d.slice(), s: o.s })) })); isikKureDurum.sec = 0; isikYaz(); bildir('Işık varsayılana döndü.', 1200); };
-$('ayKalite').onclick = () => { $('mKalite').click(); setTimeout(ayarlarYaz, 50); };
+document.querySelectorAll('#ayKalite button').forEach(b => b.onclick = e => { e.preventDefault(); D.kalite = b.dataset.v; try { localStorage.setItem('hnlKalite', D.kalite); } catch (_) {} kaliteYaz(); ayarlarYaz(); bildir(`Yüzey kalitesi: ${KALITE[D.kalite][2]} — sonraki açılan dosyada geçerli`, 2200); });
+document.querySelectorAll('#ayTeget button').forEach(b => b.onclick = e => { e.preventDefault(); window.hnlAyar.teget = b.dataset.v; ayarKaydet(); tegetKenarUygula(); ayarlarYaz(); });
+$('ayBilgi').onclick = () => { $('ayarlar').classList.toggle('aciklamali'); $('ayBilgi').classList.toggle('acik'); };
 const FARE_ACIKLAMA = {
   merkut: ['Merküt', 'Sol: döndür · Sağ/Orta: kaydır · Ctrl+Sol: kaydır · Shift+Sol: yakınlaş'],
   ortaKaydir: ['Orta kaydırır', 'Orta: kaydır · Orta+Sol/Sağ basılı: döndür · Orta basılıyken Sol/Sağa tıkla-bırak, sonra sürükle: yakınlaş · Tekerlek: ağacı kaydırır (ağaç kapalıysa yakınlaşır) · Ctrl+Tekerlek: yakınlaş'],
@@ -4988,7 +5109,7 @@ const FARE_ACIKLAMA = {
   ortaDondurSag: ['Orta döndürür, Orta+Sağ kaydırır', 'Orta: döndür · Orta+Sağ veya Shift+Orta: kaydır · Orta+Sol veya Ctrl+Orta: yakınlaş'],
   sagDondur: ['Sağ döndürür', 'Sağ: döndür · Orta veya Ctrl+Sağ: kaydır']
 };
-$('ayArayuz').onclick = () => { const s = ['oto', 'telefon', 'masaustu']; const A = window.hnlAyar; A.arayuz = s[(s.indexOf(A.arayuz || 'oto') + 1) % 3]; ayarKaydet(); arayuzUygula(); ayarlarYaz(); };
+document.querySelectorAll('#ayArayuz button').forEach(b => b.onclick = e => { e.preventDefault(); const A = window.hnlAyar; A.arayuz = b.dataset.v; ayarKaydet(); arayuzUygula(); ayarlarYaz(); });
 $('ayFare').onclick = () => { const s = Object.keys(FARE_ACIKLAMA); const A = window.hnlAyar; A.fare = s[(s.indexOf(A.fare || 'merkut') + 1) % s.length]; ayarKaydet(); ayarlarYaz(); };
 // ---- klavye kısayolları (masaüstü)
 document.addEventListener('keydown', e => {
@@ -5022,7 +5143,7 @@ $('mKenar').onclick = () => {
   ciz();
 };
 $('mKalite').onclick = () => {
-  const s = ['hizli', 'normal', 'hassas']; D.kalite = s[(s.indexOf(D.kalite) + 1) % 3]; kaliteYaz();
+  const s = ['hizli', 'normal', 'hassas']; D.kalite = s[(s.indexOf(D.kalite) + 1) % 3]; kaliteYaz(); try { localStorage.setItem('hnlKalite', D.kalite); } catch (_) {}
   bildir(`STEP kalitesi: ${KALITE[D.kalite][2]} — bir sonraki açılan dosyada geçerli`);
 };
 const RENKLER = ['#E5675B', '#F2A65A', '#F2D45A', '#5FCB8A', '#5CC2C9', '#4F8DF0', '#9B7BEA', '#E86FB2', '#B8BEC6', '#5A6270'];
@@ -6896,13 +7017,44 @@ function panelGoster(hedef) {
   return () => { $('pForm').classList.remove('acik'); $('pPanel').classList.remove('acik'); $('skPanel').classList.remove('acik'); };
 }
 async function formKapat() { sketchSecimIptal(); if (aktifForm) { aktifForm(false); await new Promise(r => setTimeout(r, 0)); } }
+
+// ------------------------------------------------------------------ özellik resimleri: formun üstünde, ölçülerin ne olduğunu şekille anlatır
+// Turuncu harfler (L, R, Ø, α, t, d) formdaki kutuların yanındaki rozetlerle aynıdır.
+const RS = (ic) => `<svg viewBox="0 0 200 84" class="pResim" aria-hidden="true">${ic}</svg>`;
+const rsOk = (x1, y1, x2, y2) => { const a = Math.atan2(y2 - y1, x2 - x1), h = 6; const u = (x, y, s) => `${x + h * Math.cos(a + s)},${y + h * Math.sin(a + s)}`; return `<path class="o" d="M${x1},${y1}L${x2},${y2}M${u(x2, y2, Math.PI * 0.85)}L${x2},${y2}L${u(x2, y2, -Math.PI * 0.85)}"/>`; };
+const rsHarf = (x, y, t) => `<text x="${x}" y="${y}" class="h">${t}</text>`;
+const OZ_RESIM = {
+  PAD: RS(`<path class="p" d="M40 62l40-14 50 10-40 14z"/><path class="s" d="M40 34l40-14 50 10-40 14zM40 34v28M90 44v28M130 30v28M80 20v28" />${rsOk(150, 58, 150, 30)}${rsHarf(158, 48, 'L')}<path class="k" d="M150 62v12" />${rsHarf(158, 78, 'L₂')}`),
+  POCKET: RS(`<path class="s" d="M30 40l50-16 70 12-50 16zM30 40v24l70 12 50-16V36M100 52v24"/><path class="c" d="M70 38l25-8 30 5-25 8zM70 38v10l30 5 25-8M100 43v10"/>${rsOk(140, 18, 140, 42)}${rsHarf(148, 30, 'L')}`),
+  SHAFT: RS(`<path class="k" d="M100 6v74"/><path class="p" d="M100 20h22v12h-10v20h16v14h-28z"/><path class="s" d="M100 20h-22v12h10v20h-16v14h28"/><path class="o" d="M140 36a40 14 0 0 1-80 0"/>${rsHarf(146, 50, 'α')}`),
+  GROOVE: RS(`<path class="s" d="M60 14h80v58H60z"/><path class="k" d="M100 4v78"/><path class="c" d="M132 34h8v18h-8zM60 34h8v18h-8z"/><path class="o" d="M150 30a50 12 0 0 1-100 0"/>${rsHarf(154, 44, 'α')}`),
+  FILLET: RS(`<path class="s" d="M50 70V36a22 22 0 0 1 22-22h80"/><path class="k" d="M72 36L56 20"/><circle cx="72" cy="36" r="2" class="n"/>${rsOk(72, 36, 57, 21)}${rsHarf(48, 18, 'R')}`),
+  CHAMFER: RS(`<path class="s" d="M50 70V40l26-26h76"/><path class="o" d="M42 40l26-26"/>${rsHarf(40, 24, 'd')}`),
+  HOLE: RS(`<path class="s" d="M30 36l60-18 80 14-60 18zM30 36v26l80 14 60-18V32M110 50v26"/><ellipse cx="100" cy="32" rx="16" ry="6" class="c"/><path class="c" d="M84 32v18M116 32v18"/>${rsOk(84, 20, 116, 20)}${rsHarf(94, 14, 'Ø')}${rsOk(124, 32, 124, 50)}${rsHarf(130, 46, 'L')}`),
+  SHELL: RS(`<path class="s" d="M40 24h120v50H40z"/><path class="c" d="M50 24v40h100V24"/>${rsOk(40, 44, 50, 44)}${rsHarf(26, 48, 't')}`),
+  DRAFT: RS(`<path class="k" d="M60 74V10"/><path class="s" d="M60 74L74 12h70l-10 62"/>${rsHarf(52, 30, 'α')}<path class="o" d="M60 30a20 20 0 0 1 5-1"/>${rsOk(170, 70, 170, 16)}`),
+  PUSH: RS(`<path class="s" d="M40 40l50-16 70 12-50 16zM40 40v24l70 12 50-16V36M110 52v24"/><path class="c" d="M40 40l50-16 70 12-50 16z"/>${rsOk(100, 34, 100, 8)}${rsHarf(106, 18, 'd')}`),
+  MIRROR: RS(`<path class="k" d="M100 6v74"/><path class="s" d="M40 60h40V30H56v14H40z"/><path class="c" d="M160 60h-40V30h24v14h16z"/>${rsOk(76, 18, 124, 18)}`),
+  RPAT: RS(`<path class="s" d="M24 50h24v24H24z"/><path class="c" d="M70 50h24v24H70zM116 50h24v24h-24zM24 10h24v24H24zM70 10h24v24H70zM116 10h24v24h-24z"/>${rsOk(36, 46, 82, 46)}${rsHarf(54, 44, 'd')}`),
+  CPAT: RS(`<circle cx="100" cy="42" r="28" class="k"/><circle cx="100" cy="14" r="7" class="s"/><circle cx="128" cy="42" r="7" class="c"/><circle cx="100" cy="70" r="7" class="c"/><circle cx="72" cy="42" r="7" class="c"/>${rsHarf(118, 22, 'α')}`),
+  SEXTRUDE: RS(`<path class="p" d="M40 66c20-14 50 10 90-4"/><path class="s" d="M40 32c20-14 50 10 90-4M40 32v34M130 28v34"/>${rsOk(150, 62, 150, 30)}${rsHarf(158, 48, 'L')}`),
+  SREVOLVE: RS(`<path class="k" d="M100 6v74"/><path class="p" d="M100 16c20 6 26 30 8 56"/><path class="s" d="M100 16c-20 6-26 30-8 56"/><path class="o" d="M140 36a40 14 0 0 1-80 0"/>${rsHarf(146, 50, 'α')}`),
+  THICK: RS(`<path class="p" d="M30 56c30-20 80-20 140 0"/><path class="s" d="M30 44c30-20 80-20 140 0"/>${rsOk(100, 42, 100, 30)}${rsHarf(106, 34, 't')}`),
+  SOFFSET: RS(`<path class="p" d="M30 62c30-20 80-20 140 0"/><path class="s" d="M30 38c30-20 80-20 140 0"/>${rsOk(100, 47, 100, 25)}${rsHarf(106, 34, 'd')}`)
+};
+// alan adı → rozet (resimdeki harf) ve onay kutuları için simge
+const ALAN_ROZET = [[/^2\. yön/i, 'L₂'], [/^(Uzunluk|Derinlik)/i, 'L'], [/^Yarıçap/i, 'R'], [/^Çap/i, 'Ø'], [/^(Açı|Eğim açısı)/i, 'α'], [/^Et kalınlığı/i, 't'], [/^1\. taraf kalınlık/i, 't'], [/^2\. taraf kalınlık/i, 't₂'], [/^Mesafe/i, 'd']];
+const ONAY_SIMGE = { 'Ters yön': 'M8 4v16M4.5 7.5L8 4l3.5 3.5M16 20V4M12.5 16.5L16 20l3.5-3.5', 'Simetrik': 'M12 3v18M8.5 6.5L12 3l3.5 3.5M8.5 17.5L12 21l3.5-3.5M5 12h14', 'Tümünden geçir': 'M12 3v18M8.5 17.5L12 21l3.5-3.5M4 9h16M4 14h16', 'Boydan (tümünden)': 'M12 3v18M8.5 17.5L12 21l3.5-3.5M4 9h16M4 14h16', 'Katıdan çıkar': 'M4 8l8-4 8 4v8l-8 4-8-4zM8 12h8', 'Diğer tarafı tut': 'M8 4v16M4.5 7.5L8 4l3.5 3.5M16 20V4M12.5 16.5L16 20l3.5-3.5' };
 function form(baslik, alanlar, dugmeYazi = 'Tamam', ops = {}) {
   if (aktifForm) aktifForm(false);
   return new Promise(coz => {
-    $('pFormBaslik').textContent = baslik; const ic = $('pFormIc'); ic.innerHTML = '';
+    $('pFormBaslik').textContent = baslik; const ic = $('pFormIc'); ic.innerHTML = ops.resim ? `<div class="pResimK">${ops.resim}</div>` : '';
     const girdiler = alanlar.map(a => {
       const sat = document.createElement('label'); sat.className = 'pAlan' + (a.tur === 'onay' ? ' onay' : '') + (a.secenek || a.genis ? ' genis' : '');
       const ad = document.createElement('span'); ad.textContent = a.ad;
+      const roz = !a.secenek && a.tur !== 'onay' && !a.metin ? (ALAN_ROZET.find(([re]) => re.test(a.ad)) || [])[1] : null;
+      if (roz) { const b = document.createElement('b'); b.className = 'pRozet'; b.textContent = roz; ad.prepend(b); }
+      if (a.tur === 'onay' && ONAY_SIMGE[a.ad]) { sat.classList.add('cip'); ad.innerHTML = `<svg viewBox="0 0 24 24"><path d="${ONAY_SIMGE[a.ad]}"/></svg>${a.ad}`; }
       let g;
       if (a.secenek) { g = document.createElement('select'); a.secenek.forEach(([v, y]) => { const o = document.createElement('option'); o.value = v; o.textContent = y; g.appendChild(o); }); g.value = a.deger; }
       else if (a.tur === 'onay') { g = document.createElement('input'); g.type = 'checkbox'; g.checked = !!a.deger; }
@@ -7049,7 +7201,7 @@ function ciz3B() {
     if (P.secYuz && P.secYuz.size) requestAnimationFrame(yuzRenk);
     const hata = (r.ozellikler || []).filter(o => o.hata); const uy = (r.ozellikler || []).filter(o => o.uyari);
     $('pDurum').textContent = hata.length ? `${hata[0].ad}: ${hata[0].hata}` : uy.length ? `⚠ ${uy[0].ad}: ${uy[0].uyari}` : `Hacim ${(r.hacim / 1000).toLocaleString('tr-TR', { maximumFractionDigits: 2 })} cm³ · ${r.idx.length / 3} üçgen · ${r.ms.toFixed(0)} ms${r.onbellek ? ` · ${r.onbellek} unsur önbellekten` : ''}`;
-  } else { const hy = r && (r.ozellikler || []).find(o => o.hata); $('pDurum').textContent = hy ? `${hy.ad}: ${hy.hata}` : r && r.yuzeyler && r.yuzeyler.length ? `${r.yuzeyler.length} yüzey · katı yok — Kalınlaştır ya da Kapat ile katıya çevir` : P.oz.some(f => f.t !== 'SKETCH') ? 'Katı oluşmadı — sketch kapalı bir şekil mi?' : 'Sketch çiz, sonra Pad ile katı yap.'; }
+  } else { const hy = r && (r.ozellikler || []).find(o => o.hata); $('pDurum').textContent = hy ? `${hy.ad}: ${hy.hata}` : r && r.yuzeyler && r.yuzeyler.length ? `${r.yuzeyler.length} yüzey · katı yok — Kalınlaştır ya da Kapat ile katıya çevir` : P.oz.some(f => f.t !== 'SKETCH') ? 'Katı oluşmadı — sketch kapalı bir şekil mi?' : 'Taslak çiz, sonra Uzat ile katı yap.'; }
   yuzeyleriCiz(V, r);
   sketchleri3BCiz(V);
   if ((!r || r.bos) && ilkSigdir && V.grup.children.length) { sigdir3B(); }
@@ -7203,9 +7355,9 @@ async function ozellikDuzenle(f, yeni) {
   let zam = null;
   const canli = r => { clearTimeout(zam); zam = setTimeout(() => { if (uygula(f, r, true)) hesapla(); }, 300); };
   if (yeni) hesapla();
-  let r = await form(`${f.ad} · ${TUR_TR[f.t]}`, alanlarOf(f), 'Tamam', { canli });
+  let r = await form(`${f.ad} · ${TUR_TR[f.t]}`, alanlarOf(f), 'Tamam', { canli, resim: OZ_RESIM[f.t] });
   clearTimeout(zam);
-  while (r && !uygula(f, r)) r = await form(`${f.ad} · ${TUR_TR[f.t]}`, alanlarOf(f), 'Tamam', { canli });
+  while (r && !uygula(f, r)) r = await form(`${f.ad} · ${TUR_TR[f.t]}`, alanlarOf(f), 'Tamam', { canli, resim: OZ_RESIM[f.t] });
   if (!r) {
     if (yeni) { const k = P.oz.indexOf(f); if (k >= 0) P.oz.splice(k, 1); }
     else { for (const k of Object.keys(f)) delete f[k]; Object.assign(f, JSON.parse(yedek)); }
@@ -8721,7 +8873,7 @@ $('pRib').onclick = () => yuzeyEkle('SWEEP'); $('pKLoft').onclick = () => yuzeyE
 $('pSExt').onclick = () => yuzeyEkle('SEXTRUDE'); $('pSRev').onclick = () => yuzeyEkle('SREVOLVE'); $('pSweep').onclick = () => yuzeyEkle('SWEEP'); $('pLoft').onclick = () => yuzeyEkle('LOFT');
 $('pFill').onclick = () => yuzeyEkle('FILL'); $('pSOff').onclick = () => yuzeyEkle('SOFFSET'); $('pJoin').onclick = () => yuzeyEkle('JOIN'); $('pExtract').onclick = () => yuzIslemi('EXTRACT');
 $('pThick').onclick = () => yuzeyEkle('THICK'); $('pBound').onclick = () => yuzeyEkle('BOUNDARY'); $('pClose').onclick = () => yuzeyEkle('CLOSESURF'); $('pSplit').onclick = () => yuzeyEkle('SPLIT');
-$('pTezgah').onclick = () => { tezgahAyarla(P.tezgah === 'y' ? 'k' : 'y'); bildir(P.tezgah === 'y' ? 'Yüzey tasarımı: Extrude, Revolve, Sweep, Loft, Fill, Offset, Join, Thick, Close, Split' : 'Katı tasarımı: Pad, Pocket, Shaft, Rib, Loft, Fillet…', 2500); };
+$('pTezgah').onclick = () => { tezgahAyarla(P.tezgah === 'y' ? 'k' : 'y'); bildir(P.tezgah === 'y' ? 'Yüzey tasarımı: uzat, döndür, süpür, geçiş, dolgu, öteleme, birleştir, kalınlaştır, kapat, böl' : 'Katı tasarımı: uzat, cep, döndür, süpür, geçiş, radyus…', 2500); };
 $('pmIce').onclick = () => { $('pMenuP').classList.remove('acik'); $('pStepGir').click(); };
 $('pStepGir').onchange = async e => { const f = e.target.files[0]; e.target.value = ''; if (!f) return; await stepIceAktar(f.name, new Uint8Array(await f.arrayBuffer())); };
 $('pGeri').onclick = geriAl; $('pYinele').onclick = yinele; $('pSigdir').onclick = sigdir3B;
@@ -18519,6 +18671,80 @@ $('camIc').addEventListener('click', e => {
   window.matchMedia(YATAY).addEventListener('change', () => { if (tur.classList.contains('acik')) { adimlar = adimlariKur(); adim = Math.min(adim, adimlar.length - 1); turCiz(); } });
   // ilk açılışta turu bir kez göster
   try { if (!localStorage.getItem('hnlTurGoruldu')) { localStorage.setItem('hnlTurGoruldu', '1'); setTimeout(turAc, 600); } } catch (e) {}
+})();
+
+// ===================================================================== SÜRÜKLENEBİLİR PANELLER (masaüstü)
+// Araç şeridi ve ürün ağacı tutamağından sürüklenir. Ekran kenarına yaklaştırılınca o kenara yapışır (pencereyi kenara
+// çekince kaplaması gibi); ortada bırakılırsa yüzer pencere olur. Tutamağa çift tıklama: varsayılan yerine döner.
+(function () {
+  const IZGARA = '<svg viewBox="0 0 24 24"><circle cx="9" cy="6" r="1.6"/><circle cx="15" cy="6" r="1.6"/><circle cx="9" cy="12" r="1.6"/><circle cx="15" cy="12" r="1.6"/><circle cx="9" cy="18" r="1.6"/><circle cx="15" cy="18" r="1.6"/></svg>';
+  let D_ = {}; try { D_ = JSON.parse(localStorage.getItem('hnlPanel') || '{}'); } catch (e) {}
+  const kaydet = () => { try { localStorage.setItem('hnlPanel', JSON.stringify(D_)); } catch (e) {} };
+  const golge = document.createElement('div'); golge.id = 'yaslaGolge'; document.body.appendChild(golge);
+  const PANELLER = {
+    serit: { el: () => $('aracSerit'), varsayilan: 'sag', kenarlar: ['sol', 'sag', 'ust', 'alt'], sinif: { sol: 'seritSol', ust: 'seritUst', alt: 'seritAlt', yuzer: 'seritYuzer' } },
+    agac: { el: () => $('agac'), varsayilan: 'sol', kenarlar: ['sol', 'sag'], sinif: { sag: 'agacSag', yuzer: 'agacYuzer' } }
+  };
+  function uygula(ad) {
+    const P = PANELLER[ad], el = P.el(); if (!el) return; const d = D_[ad] || {}; const y = d.yasla || P.varsayilan;
+    Object.values(P.sinif).forEach(c => document.body.classList.remove(c)); if (P.sinif[y]) document.body.classList.add(P.sinif[y]);
+    if (ad === 'serit' && ['ust', 'alt', 'yuzer'].includes(y)) document.body.classList.remove('sagKatli');
+    if (y === 'yuzer' && document.body.classList.contains('masaustu')) {
+      const W = innerWidth, H = innerHeight;
+      el.style.left = Math.max(0, Math.min(W - 120, d.x || 200)) + 'px'; el.style.top = Math.max(0, Math.min(H - 80, d.y || 120)) + 'px';
+      if (ad === 'serit') el.style.maxHeight = Math.max(160, H - Math.max(0, Math.min(H - 80, d.y || 120)) - 10) + 'px';
+      if (ad === 'agac') { const yy = Math.max(0, Math.min(H - 80, d.y || 120)); el.style.width = Math.min(d.w || 320, W - 20) + 'px'; el.style.height = Math.max(180, Math.min(d.h || Math.round(H * 0.6), H - yy - 10)) + 'px'; }
+    } else { el.style.left = el.style.top = el.style.width = el.style.height = el.style.maxHeight = ''; }
+    window.dispatchEvent(new Event('resize'));
+  }
+  function bolge(x, y, P) {   // imlecin yakın olduğu ekran kenarı
+    const nav = $('modulNav').getBoundingClientRect().right, ust = 52, W = innerWidth, H = innerHeight, E = 56;
+    if (P.kenarlar.includes('sol') && x < nav + E) return 'sol';
+    if (P.kenarlar.includes('sag') && x > W - E) return 'sag';
+    if (P.kenarlar.includes('ust') && y < ust + E) return 'ust';
+    if (P.kenarlar.includes('alt') && y > H - E) return 'alt';
+    return null;
+  }
+  function golgeGoster(b, ad) {
+    if (!b) { golge.style.display = 'none'; return; }
+    const nav = $('modulNav').getBoundingClientRect().right, W = innerWidth, H = innerHeight, k = ad === 'serit' ? 96 : 320;
+    const r = { sol: [nav, 52, k, H - 52], sag: [W - k, 52, k, H - 52], ust: [nav, 52, W - nav, 70], alt: [nav, H - 70, W - nav, 70] }[b];
+    Object.assign(golge.style, { display: 'block', left: r[0] + 'px', top: r[1] + 'px', width: r[2] + 'px', height: r[3] + 'px' });
+  }
+  function tutamakKur(ad, tutamak) {
+    const P = PANELLER[ad];
+    tutamak.addEventListener('dblclick', e => { e.preventDefault(); D_[ad] = { yasla: P.varsayilan }; kaydet(); uygula(ad); });
+    tutamak.addEventListener('pointerdown', e => {
+      if (!document.body.classList.contains('masaustu') || e.button !== 0) return;
+      if (e.target.closest('button:not(.tutamak)')) return;
+      const el = P.el(); const r = el.getBoundingClientRect(); const dx = e.clientX - r.left, dy = e.clientY - r.top; let surukle = false;
+      const x0 = e.clientX, y0 = e.clientY; try { tutamak.setPointerCapture(e.pointerId); } catch (_) {}
+      const hareket = ev => {
+        if (!surukle) { if (Math.hypot(ev.clientX - x0, ev.clientY - y0) < 6) return; surukle = true;
+          // yüzer görünüme geç (genişlik korunur)
+          D_[ad] = Object.assign({}, D_[ad], { yasla: 'yuzer', x: r.left, y: r.top, w: ad === 'agac' ? r.width : undefined, h: ad === 'agac' ? Math.min(r.height, innerHeight * 0.7) : undefined }); uygula(ad); el.classList.add('panelSuruklen'); }
+        el.style.left = (ev.clientX - dx) + 'px'; el.style.top = Math.max(0, ev.clientY - dy) + 'px';
+        golgeGoster(bolge(ev.clientX, ev.clientY, P), ad);
+      };
+      const birak = ev => {
+        tutamak.removeEventListener('pointermove', hareket); tutamak.removeEventListener('pointerup', birak); tutamak.removeEventListener('pointercancel', birak);
+        golge.style.display = 'none'; el.classList.remove('panelSuruklen'); if (!surukle) return;
+        const b = bolge(ev.clientX, ev.clientY, P); const q = el.getBoundingClientRect();
+        D_[ad] = b ? { yasla: b } : { yasla: 'yuzer', x: q.left, y: q.top, w: ad === 'agac' ? q.width : undefined, h: ad === 'agac' ? q.height : undefined };
+        kaydet(); uygula(ad);
+      };
+      tutamak.addEventListener('pointermove', hareket); tutamak.addEventListener('pointerup', birak); tutamak.addEventListener('pointercancel', birak);
+    });
+  }
+  // tutamakları yerleştir
+  const ts = document.createElement('div'); ts.className = 'tutamak'; ts.title = 'Sürükle: şeridi taşı · kenara bırak: yapıştır · çift tık: varsayılan yer'; ts.innerHTML = IZGARA;
+  const s = $('aracSerit'); if (s) { s.insertBefore(ts, s.firstChild); tutamakKur('serit', ts); }
+  const ab = document.querySelector('#agac .baslik'); if (ab) { const ta = document.createElement('span'); ta.className = 'tutamak'; ta.title = 'Sürükle: ağacı taşı · kenara bırak: yapıştır · çift tık: varsayılan yer'; ta.innerHTML = IZGARA; ab.insertBefore(ta, ab.firstChild); tutamakKur('agac', ab); }
+  // yüzer ağacın boyutu değişince hatırla
+  if (window.ResizeObserver && $('agac')) new ResizeObserver(() => { const d = D_.agac; if (d && d.yasla === 'yuzer' && !$('agac').classList.contains('panelSuruklen')) { const q = $('agac').getBoundingClientRect(); if (q.width > 50) { d.w = q.width; d.h = q.height; kaydet(); } } }).observe($('agac'));
+  window.panelleriUygula = () => { uygula('serit'); uygula('agac'); };
+  panelleriUygula();
+  window.addEventListener('resize', () => { for (const ad of ['serit', 'agac']) { const d = D_[ad]; if (d && d.yasla === 'yuzer') { const el = PANELLER[ad].el(); const q = el.getBoundingClientRect(); if (q.left > innerWidth - 60 || q.top > innerHeight - 40) uygula(ad); } } });
 })();
 </script>
 </body>
